@@ -1,0 +1,2 @@
+module KoyoPostgresReplication
+end
