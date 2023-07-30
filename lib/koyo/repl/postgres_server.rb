@@ -17,8 +17,8 @@ module Koyo::Repl
     end
 
     def initialize
-      @test_mode = Koyo::Repl::Config.test_mode
-      if Koyo::Repl::Config.auto_create_replication_slot?
+      @test_mode = Koyo::Repl.config.test_mode
+      if Koyo::Repl.config.auto_create_replication_slot
         Koyo::Repl::Utils.create_replication_slot!
       end
       @tables = Koyo::Repl::PostgresServer.tables_that_handle_koyo_replication
@@ -29,12 +29,12 @@ module Koyo::Repl
     def run!
       catch(:done) do
         check
-        sleep Koyo::Repl::Config.sql_delay
+        sleep Koyo::Repl.config.sql_delay
         run!
       rescue StandardError => e
         msg = "Error in ReplPostgresServer: #{e.message}"
         log(msg, err: e)
-        sleep Koyo::Repl::Config.sql_delay
+        sleep Koyo::Repl.config.sql_delay
         run!
       end
     end
@@ -48,8 +48,14 @@ module Koyo::Repl
       sql_results.each do |sql_res|
         rows = Koyo::Repl::Data.new(sql_res).rows # returns ReplDataRow
         rows.each do |row|
+          # handle catch all if it exists
+          if Koyo::Repl.config.handler_klass
+            Koyo::Repl.config.handler_klass.constantize
+                      .koyo_handle_all_replication(row)
+          end
           next unless tables.include?(row.table)
 
+          # handle model callbacks
           klass = tables[row.table].constantize
           mname = klass.send("#{TABLE_METHOD_NAME}_method")
           klass.send(mname, row)
@@ -68,7 +74,7 @@ module Koyo::Repl
       # check if replication slot is setup
       unless Koyo::Repl::Utils.replication_slot_exists?
         errs << "Error: Replication Slot doesn't exist. "\
-                'See koyo-postgres-replication gem for how to set this up.'
+                 'See koyo-postgres-replication gem for how to set this up.'
       end
 
       # check if any tables are setup to handle replication events

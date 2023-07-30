@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    koyo_postgres_replication (0.1.0)
+    koyo-postgres-replication (0.1.0)
+      pg
       rails
       rake
 
@@ -78,12 +79,24 @@ GEM
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     date (3.3.3)
+    debug (1.8.0)
+      irb (>= 1.5.0)
+      reline (>= 0.3.1)
     diff-lcs (1.5.0)
     erubi (1.12.0)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
+    ffaker (2.21.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    io-console (0.6.0)
+    irb (1.7.4)
+      reline (>= 0.3.6)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
     loofah (2.21.3)
@@ -114,6 +127,7 @@ GEM
     parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
+    pg (1.5.3)
     racc (1.7.1)
     rack (2.2.7)
     rack-test (2.1.0)
@@ -149,11 +163,9 @@ GEM
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.8.1)
+    reline (0.3.7)
+      io-console (~> 0.5)
     rexml (3.2.6)
-    rspec (3.12.0)
-      rspec-core (~> 3.12.0)
-      rspec-expectations (~> 3.12.0)
-      rspec-mocks (~> 3.12.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -162,6 +174,14 @@ GEM
     rspec-mocks (3.12.6)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
+    rspec-rails (6.0.3)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      railties (>= 6.1)
+      rspec-core (~> 3.12)
+      rspec-expectations (~> 3.12)
+      rspec-mocks (~> 3.12)
+      rspec-support (~> 3.12)
     rspec-support (3.12.1)
     rubocop (1.55.0)
       json (~> 2.3)
@@ -185,17 +205,23 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    yard (0.9.34)
     zeitwerk (2.6.9)
 
 PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
-  koyo_postgres_replication!
+  debug
+  factory_bot_rails
+  ffaker
+  koyo-postgres-replication!
+  pg (~> 1.1)
   rails (~> 7.0.4, >= 7.0.4.3)
   rake (~> 13.0)
-  rspec (~> 3.0)
-  rubocop (~> 1.21)
+  rspec-rails (~> 6.0.0)
+  rubocop
+  yard
 
 BUNDLED WITH
    2.4.10

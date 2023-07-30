@@ -69,7 +69,8 @@ module Koyo::Repl
 
       # Runs SQL commands
       def exec_sql(sql)
-        ActiveRecord::Base.connection.execute(sql)
+        #ActiveRecord::Base.connection.execute(sql)
+        Koyo::Repl.config.db_conn.execute(sql)
       end
 
       # wrap this to support faster JSON parsing in the future
@@ -78,7 +79,11 @@ module Koyo::Repl
       end
 
       def config_slot
-        Koyo::Repl::Config.slot
+        Koyo::Repl.config.slot
+      end
+
+      def to_bool(val)
+        ['1', 'true', 't', 'yes'].include?(val.to_s.downcase.strip)
       end
     end
   end
