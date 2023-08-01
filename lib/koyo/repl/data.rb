@@ -1,6 +1,5 @@
+# frozen_string_literal: true
 module Koyo::Repl
-  # frozen_string_literal: true
-
   # Class wrapper for replication data pulls
   #   Example data packet
   #

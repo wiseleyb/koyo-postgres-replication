@@ -11,6 +11,8 @@ module Koyo::Repl
       msg << "Replication slot exists: #{replication_slot_exists?}"
       msg << "Registered tables: \n#{h_to_s(registered_tables)}"
       msg << "Can connect to db: #{can_connect?}"
+      msg << "Connection adapter: #{adapter_name}"
+      msg << "Wal Level (should be 'logical'): #{wal_level}"
       msg << "Can access replication slot: #{can_access_replication_slot?}"
       msg << "Replication slot count: #{repl_count}"
       msg
@@ -48,6 +50,17 @@ module Koyo::Repl
       "Error: #{err.message}"
     end
 
+    def adapter_name
+      Koyo::Repl.config.db_conn.adapter_name
+    rescue => err
+      "Error: #{err.message}"
+    end
+
+    def wal_level
+      Koyo::Repl::Utils.wal_level
+    rescue => err
+      "Error: #{err.message}"
+    end
 
     def h_to_s(h)
       h.map {|k, v| "  #{k}: #{v}"}.join("\n")

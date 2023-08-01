@@ -1,40 +1,25 @@
 # frozen_string_literal: true
 # Include this for logging help
 module Koyo::Repl::Log
+  LOG_LEVELS = %w(debug info warn error fatal)
+
   def self.included(base)
     base.extend(ClassMethods)
-    def log_repl_debug(message, data = {})
-      self.class.log_repl(message, data, log_level: :debug)
-    end
 
-    def log_repl_info(message, data = {})
-      self.class.log_repl(message, data, log_level: :info)
-    end
-
-    def log_repl_warn(message, data = {})
-      self.class.log_repl(message, data, log_level: :warn)
-    end
-
-    def log_repl_error(message, data = {})
-      self.class.log_repl(message, data, log_level: :error)
+    # do some hacky meta programming to create helper methods
+    LOG_LEVELS.each do |lvl|
+      define_method "log_repl_#{lvl}" do |message, data = {}|
+        self.class.log_repl(message, data, log_level: lvl.to_sym)
+      end
     end
   end
 
   module ClassMethods
-    def log_repl_debug(message, data = {})
-      log_repl(message, data, log_level: :debug)
-    end
-
-    def log_repl_info(message, data = {})
-      log_repl(message, data, log_level: :info)
-    end
-
-    def log_repl_warn(message, data = {})
-      log_repl(message, data, log_level: :warn)
-    end
-
-    def log_repl_error(message, data = {})
-      log_repl(message, data, log_level: :error)
+    # do some hacky meta programming to create helper methods
+    LOG_LEVELS.each do |lvl|
+      define_method "log_repl_#{lvl}" do |message, data = {}|
+        log_repl(message, data, log_level: lvl.to_sym)
+      end
     end
 
     # @param [Hash] data to add to log message
@@ -59,18 +44,13 @@ module Koyo::Repl::Log
     def log_repl_hash(hash, log_level)
       logid = SecureRandom.hex(5)
       hash.each do |k, v|
-        msg = "source=KoyoReplication logid=#{logid} #{k}=#{v}"
+        msg = "source=KoyoReplication logid=#{logid} level=#{log_level} "\
+              "#{k}=#{v}"
         puts msg
-        case log_level
-        when :debug
-          Rails.logger.debug msg
-        when :info
-          Rails.logger.info msg
-        when :warn
-          Rails.logger.warn msg
-        when :info
-          Rails.logger.error msg
+        unless LOG_LEVELS.include?(log_level.to_s)
+          raise "Invalid logger level. Valid options are #{LOG_LEVELS}"
         end
+        Rails.logger.send(log_level, msg)
       end
       if Koyo::Repl.config.handler_klass
         Koyo::Repl.config.handler_klass.constantize

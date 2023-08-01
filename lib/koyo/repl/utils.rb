@@ -80,6 +80,18 @@ module Koyo::Repl
         exec_sql(sql)
       end
 
+      def wal_level
+        sql = %(show wal_level)
+        exec_sql(sql).first['wal_level']
+      end
+
+      # This requires admin permissions, requires restarting your system
+      # so i removed it for now
+      # def set_wal_level_to_logical
+      #   sql = %(ALTER SYSTEM SET wal_level = logical)
+      #   exec_sql(sql)
+      # end
+
       # Runs SQL commands
       def exec_sql(sql)
         #ActiveRecord::Base.connection.execute(sql)
