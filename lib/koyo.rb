@@ -20,13 +20,5 @@ module Koyo
     def self.configure(&block)
       yield(config)
     end
-
-    def self.debug(val)
-      puts val if config.debug_mode
-    end
-
-    def self.debug_border(char = '*')
-      puts char * 80 if config.debug_mode
-    end
   end
 end

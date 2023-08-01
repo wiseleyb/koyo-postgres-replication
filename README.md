@@ -22,3 +22,9 @@ Guide: https://www.hocnest.com/blog/testing-an-engine-with-rspec/
 
 bundle console
 
+
+TODO:
+* add generators/install
+* figure out better logging options
+* add monitoring helpers
+* add diagnostic tool (checks permissions, postgres, etc)

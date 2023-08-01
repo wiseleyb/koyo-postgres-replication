@@ -3,10 +3,13 @@
 module Koyo::Repl
   # Monitors a postgres replication slot
   class PostgresServer
+    include Koyo::Repl::Log
+
     @@tables = {} # somewhat expensive to create - so cache
 
     attr_accessor :tables,  # classes that implement koyo_repl_handler(row)
                   :test_mode, # when true - only peeks at slot
+                  :tick_tock, # just outputs something in logs every minute
                   :errs # collects error messages - these are sent to log
 
     # method name to look for in classes that support this
@@ -23,6 +26,7 @@ module Koyo::Repl
       end
       @tables = Koyo::Repl::PostgresServer.tables_that_handle_koyo_replication
       @errs = []
+      @tick_tock = 0
       raise "Can't run server: #{@errs.join('; ')}" unless can_run?
     end
 
@@ -30,12 +34,21 @@ module Koyo::Repl
       catch(:done) do
         check
         sleep Koyo::Repl.config.sql_delay
+        tick_tock
         run!
       rescue StandardError => e
         msg = "Error in ReplPostgresServer: #{e.message}"
-        log(msg, err: e)
+        log_repl_error(msg, err: e)
         sleep Koyo::Repl.config.sql_delay
         run!
+      end
+    end
+
+    def tick_tock
+      @tick_tock += 1
+      if @tick_tock > 59
+        log_repl_info("tick tock: #{Time.now}")
+        @tick_tock = 0
       end
     end
 
@@ -48,6 +61,7 @@ module Koyo::Repl
       sql_results.each do |sql_res|
         rows = Koyo::Repl::Data.new(sql_res).rows # returns ReplDataRow
         rows.each do |row|
+          log_repl_debug(row.to_yaml)
           # handle catch all if it exists
           if Koyo::Repl.config.handler_klass
             Koyo::Repl.config.handler_klass.constantize
@@ -60,7 +74,7 @@ module Koyo::Repl
           mname = klass.send("#{TABLE_METHOD_NAME}_method")
           klass.send(mname, row)
         rescue StandardError => e
-          log('Unexpected Error in ReplServer.check', err: e)
+          log_repl_error('Unexpected Error in ReplServer.check', err: e)
         end
       end
     end
@@ -86,17 +100,9 @@ module Koyo::Repl
       # if there were any errors - let user know we're shutting down
       errs << 'Shutting down' unless errs.empty?
 
-      errs.each { |msg| log(msg) }
+      errs.each { |msg| log_repl_error(msg) }
 
       errs.empty?
-    end
-
-    def log(msg, err: nil)
-      Koyo::Repl::PostgresServer.log(msg, err: err)
-    end
-
-    def self.log(msg, err: nil)
-      Koyo::Repl::Log.log_repl(msg, err: err)
     end
 
     # Finds all models that that implement 'self.koyo_repl_handler'
@@ -104,7 +110,7 @@ module Koyo::Repl
     def self.tables_that_handle_koyo_replication
       return @@tables if @@tables.present?
       method_name = TABLE_METHOD_NAME
-      log("Init: Finding models that support #{method_name}")
+      log_repl_info("Init: Finding models that support #{method_name}")
       tables = {}
       ActiveRecord::Base.connection.tables.map do |model|
         klass_name = model.capitalize.singularize.camelize
@@ -113,14 +119,14 @@ module Koyo::Repl
 
         tables[klass.table_name] = klass_name
       rescue NameError # filters out stuff like SchemaMigration
-        log("Init: ignoring model #{klass_name}")
+        log_repl_info("Init: ignoring model #{klass_name}")
       rescue StandardError => e
-        log('Unexpected Error in '\
+        log_repl_error('Unexpected Error in '\
             'ReplServer.tables_that_handle_koyo_replication',
             err: e)
       end
       tables.each do |t|
-        log("Init: registering handler #{t}")
+        log_repl_info("Init: registering handler #{t}")
       end
       @@tables = tables
       @@tables

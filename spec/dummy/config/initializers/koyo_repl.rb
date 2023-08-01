@@ -22,10 +22,6 @@ Koyo::Repl.configure do |config|
   # replication - the connection would be "replciation_#{Rails.env}"
   config.db_conn = 'replication'
 
-  # When true debug_mode will put out diagnostic type info to the server log
-  # Default to false
-  config.debug_mode = true
-
   # Determines the name of this replication slot. Defaults to
   # koyo_repl_{Rails.env}.
   # You can check replication slots that exist with:

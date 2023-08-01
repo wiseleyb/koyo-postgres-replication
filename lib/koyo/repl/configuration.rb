@@ -5,7 +5,6 @@ module Koyo::Repl
                   :handler_klass,
                   :config_prefix,
                   :db_conn,
-                  :debug_mode,
                   :slot,
                   :sql_delay,
                   :test_mode
@@ -51,9 +50,8 @@ module Koyo::Repl
 
       conn_name = "#{conn_name}_#{Rails.env}"
 
-      Koyo::Repl.debug_border
-      Koyo::Repl.debug("Establishing connection: #{conn_name}")
-      Koyo::Repl.debug_border
+      msg = "source=KoyoReplication Connecting to #{conn_name}"
+      Rails.logger.info msg
 
       config =
         ApplicationRecord.configurations.find_db_config(conn_name)
