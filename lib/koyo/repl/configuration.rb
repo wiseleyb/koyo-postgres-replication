@@ -33,6 +33,9 @@ module Koyo::Repl
       @config_prefix || ENV['KOYO_REPL_CONFIG_PREFIX'] || 'KOYO_REPL'
     end
 
+    def db_conn_name
+      @db_conn || ENV["#{config_prefix}_DB_CONN_NAME"]
+    end
     # DB connection name in config/database.yml. Defaults to Rails.env
     # (so standard connection on most rails app). We add this because you need
     # admin priveleges to use replication and some companies have problems with
@@ -41,7 +44,7 @@ module Koyo::Repl
     def db_conn
       return @conn if @conn
 
-      conn_name = @db_conn || ENV["#{config_prefix}_DB_CONN_NAME"]
+      conn_name = db_conn_name
 
       unless conn_name
         @conn = ActiveRecord::Base.connection
@@ -95,6 +98,22 @@ module Koyo::Repl
     def test_mode
       val = @test_mode || ENV["#{config_prefix}_TEST_MODE"]
       Koyo::Repl::Utils.to_bool(val)
+    end
+
+    def to_h
+      {
+        auto_create_replication_slot: auto_create_replication_slot,
+        handler_klass: handler_klass,
+        config_prefix: config_prefix,
+        db_conn: db_conn_name,
+        slot: slot,
+        sql_delay: sql_delay,
+        test_mode: test_mode
+      }
+    end
+
+    def to_s
+      to_h.map {|k, v| "#{k}: #{v}"}.join("\n")
     end
   end
 end

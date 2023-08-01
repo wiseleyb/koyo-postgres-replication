@@ -35,6 +35,19 @@ module Koyo::Repl
         exec_sql(sql)
       end
 
+      # Checks count of current slot
+      def replication_slot_count
+        sql = %(
+          SELECT count(*)
+          FROM pg_logical_slot_peek_changes('#{config_slot}',
+                                            NULL,
+                                            NULL,
+                                            'pretty-print',
+                                            '1');
+        )
+        exec_sql(sql).first['count'].to_i
+      end
+
       # Checks to see if the replication slot exists
       def replication_slot_exists?
         sql = %(

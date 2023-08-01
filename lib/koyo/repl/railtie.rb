@@ -14,6 +14,14 @@ module Koyo::Repl
             puts 'Running Koyo::Repl::PostgresServer.run!'
             Koyo::Repl::PostgresServer.run!
           end
+
+          desc 'Diagnostics: Basic setup/state information'
+          task diagnostics: :environment do
+            lvl = Rails.logger.level
+            Rails.logger.level = :error
+            puts Koyo::Repl::Diagnostics.new.rake_info.join("\n")
+            Rails.logger.level = lvl
+          end
         end
       end
     end
