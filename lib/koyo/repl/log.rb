@@ -25,6 +25,7 @@ module Koyo::Repl::Log
     # @param [Hash] data to add to log message
     def log_repl(message, data = {}, log_level: :info)
       return if message.blank?
+      return if Koyo::Repl.config.disable_logging
 
       err = data.delete(:err)
       if err
@@ -42,6 +43,7 @@ module Koyo::Repl::Log
     # logs messages
     # adds a short guid for tracking multiple messages
     def log_repl_hash(hash, log_level)
+      return if Koyo::Repl.config.disable_logging
       logid = SecureRandom.hex(5)
       hash.each do |k, v|
         msg = "source=KoyoReplication logid=#{logid} level=#{log_level} "\

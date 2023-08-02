@@ -28,3 +28,4 @@ TODO:
 * figure out better logging options
 * add monitoring helpers
 * add diagnostic tool (checks permissions, postgres, etc)
+* [yard docs](https://gnuu.org/2009/11/21/generate-yard-docs-for-your-gem/)

@@ -5,6 +5,7 @@ module Koyo::Repl
                   :handler_klass,
                   :config_prefix,
                   :db_conn,
+                  :disable_logging,
                   :slot,
                   :sql_delay,
                   :test_mode
@@ -20,12 +21,14 @@ module Koyo::Repl
 
     # Will call this to handle all replication events (see README)
     # Example for this could be something like
-    # class CatchAll
+    # class KoyoReplHandler
     #   def self.koyo_handle_all_replication(row); end
     # end
-    # ENV['KOYO_REPL_CATCH_ALL_KLASS'] = 'CatchAll'
+    # ENV['KOYO_REPL_HANDLER_KLASS'] = 'KoyoReplHandler'
     def handler_klass
-      @handler_klass || ENV["#{config_prefix}_HANDLER_KLASS"]
+      @handler_klass ||
+        ENV["#{config_prefix}_HANDLER_KLASS"] ||
+        'KoyoReplHandler'
     end
 
     # overrides the default prefix of ENV variables
@@ -63,10 +66,11 @@ module Koyo::Repl
       @conn
     end
 
-    # Adds debugging to server output
-    def debug_mode
-      Koyo::Repl::Utils.to_bool(@debug_mode ||
-                                ENV["#{config_prefix}_DEBUG_MODE"])
+    # Disables logging
+    # Defaults to false
+    def disable_logging
+      Koyo::Repl::Utils.to_bool(@disable_logging ||
+                                ENV["#{config_prefix}_DISABLE_LOGGING"])
     end
 
     # Replication Slot name - can be any string

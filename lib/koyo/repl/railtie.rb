@@ -8,19 +8,27 @@ module Koyo::Repl
     rake_tasks do
       namespace :koyo do
         namespace :repl do
+          desc 'Diagnostics: Basic setup/state information'
+          task diagnostics: :environment do
+            puts ''
+            puts '-' * 80
+            puts 'Koyo::Repl::Diagnostic'
+            puts Koyo::Repl::Diagnostics.new.rake_info.join("\n")
+            puts '-' * 80
+            puts ''
+          end
+
+          # Installs templates
+          desc 'Install'
+          task install: :environment do
+            Koyo::Repl::Install.copy!
+          end
+
           # This can only be run once - no multiple servers
           desc 'Process replication slot events'
           task run_server: :environment do
             puts 'Running Koyo::Repl::PostgresServer.run!'
             Koyo::Repl::PostgresServer.run!
-          end
-
-          desc 'Diagnostics: Basic setup/state information'
-          task diagnostics: :environment do
-            lvl = Rails.logger.level
-            Rails.logger.level = :error
-            puts Koyo::Repl::Diagnostics.new.rake_info.join("\n")
-            Rails.logger.level = lvl
           end
         end
       end
