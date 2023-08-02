@@ -36,8 +36,11 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency "rails"
-  spec.add_dependency "rake"
-  spec.add_dependency "pg"
-  spec.add_development_dependency "rspec-rails"
+  spec.add_dependency 'rails'
+  spec.add_dependency 'rake'
+  spec.add_dependency 'pg'
+  spec.add_development_dependency 'yard'
+  spec.add_development_dependency 'rspec-rails'
+
+  spec.has_rdoc = 'yard'
 end

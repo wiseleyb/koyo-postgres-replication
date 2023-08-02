@@ -23,7 +23,18 @@ Guide: https://www.hocnest.com/blog/testing-an-engine-with-rspec/
 bundle console
 
 
-TODO:
+## Yard
+
+Cheat sheets:
+* https://gist.github.com/chetan/1827484
+* https://kapeli.com/cheat_sheets/Yard.docset/Contents/Resources/Documents/index
+
+Build yard docs: `yard`
+View docs: `yard server` then open https://localhost:8808
+
+
+# TODO
+
 * add generators/install
 * figure out better logging options
 * add monitoring helpers

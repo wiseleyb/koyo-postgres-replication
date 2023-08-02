@@ -1,0 +1,13 @@
+lib/koyo.rb aaf9e3913b64a7ac2c30926f66d52f3fe915a71d
+lib/koyo/repl/log.rb 9809d4f8992465b79ef0ee844b7a0a9ddf1f25fe
+lib/koyo/repl/mod.rb e28559ea746707e1a23af7690c775de688024f35
+lib/koyo/repl/data.rb 3be8d07736252b48a64252d3883da960155c782f
+lib/koyo/repl/utils.rb e1b607852ab426ad55c0aa0006d9b91d9e6d0dfe
+lib/koyo/repl/install.rb 5e53a4cff7b60f01a9f6011342cb765028a0b55d
+lib/koyo/repl/railtie.rb 131ee3aeca5df8de157c271151eb8307c2dfdb1e
+lib/koyo/repl/version.rb 702509814942de00908dad9546f5b37e5b4f3e20
+lib/koyo/repl/data_row.rb ec80d9da7335ef6a26b22e590ba6075867217d39
+lib/koyo/repl/diagnostics.rb 7a7013c18689ea20b562b89ed4ef04b4d0870d0c
+lib/koyo/repl/configuration.rb 60032600e94cc2551bcd1407777cb6ae1cc5034b
+lib/koyo/repl/postgres_server.rb c86919f82ae027431111388d6a73bbadc658f3bc
+lib/koyo_postgres_replication.rb f4ba4c773e2c7603da7d542f9953a5af7c91ea3a
