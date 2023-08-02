@@ -14,8 +14,8 @@ RSpec.describe Koyo::Repl::PostgresServer, type: :service do
 
       before do
         expect(User).to receive(:handle_replication)
-        expect(KoyoReplHandlers).to receive(:koyo_handle_all_replication)
-        expect(KoyoReplHandlers).to receive(:koyo_log_event).at_least(:once)
+        expect(KoyoReplHandler).to receive(:koyo_handle_all_replication)
+        expect(KoyoReplHandler).to receive(:koyo_log_event).at_least(:once)
       end
 
       it 'works' do
