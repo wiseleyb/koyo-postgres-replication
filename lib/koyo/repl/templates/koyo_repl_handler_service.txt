@@ -1,0 +1,54 @@
+# frozen_string_literal: true
+# You can override these methods to do things like ping Slack, retart
+# crashed things, handle errors, handle logging, handle all replicaiton events 
+# (instead of doing this in models)
+class KoyoReplHandlerService < Koyo::Repl::EventHandlerService
+  class << self
+    # example row:
+    # User.handle_replcation called
+    # TODO: Add link to class returned
+    # def koyo_handle_all_replication(row)
+    #   super
+    # end
+
+    # Called whenever an error is raised in Koyo::Repl code
+    # def koyo_error(err)
+    #   super
+    # end
+
+    # log_level: :debug, :info, :warn, :error, :fatal
+    # Example of message
+    # source=KoyoReplication logid=d7f1f0bb2a
+    #   message=Init: Finding models that support koyo_repl_handler
+    # You can use this as a catch all for any log event or use methods
+    # below if that's easier
+    # def koyo_log_event(message, log_level)
+    #   super
+    # end
+
+    # Called whenever Rails.logger.debug is called from Koyo::Repl code
+    # def koyo_log_event_debug(message)
+    #   super
+    # end
+
+    # Called whenever Rails.logger.debug is called from Koyo::Repl code
+    # def koyo_log_event_info(message)
+    #   super
+    # end
+
+    # Called whenever Rails.logger.debug is called from Koyo::Repl code
+    # def koyo_log_event_warn(message)
+    #   super
+    # end
+
+    # Called whenever Rails.logger.debug is called from Koyo::Repl code
+    # def koyo_log_event_error(message)
+    #   super
+    # end
+
+    # Called whenever Rails.logger.debug is called from Koyo::Repl code
+    # def koyo_log_event_fatal(message)
+    #   super
+    # end
+  end
+end

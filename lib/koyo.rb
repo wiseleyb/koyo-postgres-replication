@@ -6,6 +6,7 @@ module Koyo
     require_relative 'koyo/repl/data'
     require_relative 'koyo/repl/data_row'
     require_relative 'koyo/repl/diagnostics'
+    require_relative 'koyo/repl/event_handler_service'
     require_relative 'koyo/repl/install'
     require_relative 'koyo/repl/log'
     require_relative 'koyo/repl/mod'

@@ -53,10 +53,9 @@ module Koyo::Repl::Log
           raise "Invalid logger level. Valid options are #{LOG_LEVELS}"
         end
         Rails.logger.send(log_level, msg)
-      end
-      if Koyo::Repl.config.handler_klass
-        Koyo::Repl.config.handler_klass.constantize
-                  .koyo_log_event(hash, log_level)
+        Koyo::Repl::EventHandlerService.koyo_log_event(msg, log_level)
+        Koyo::Repl::EventHandlerService.send("koyo_log_event_#{log_level}",
+                                             msg)
       end
     end
   end

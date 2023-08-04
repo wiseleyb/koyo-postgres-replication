@@ -12,16 +12,13 @@ module Koyo::Repl
     def copy!
       puts ''
       puts '-' * 80
-      puts 'Adding config/initializers/koyo_repl.rb'
       copy("#{template_path}/koyo_postgres_replication_config.txt",
            "#{rails_path}/config/initializers/"\
              'koyo_postgres_replication_config.rb')
 
-      puts 'Adding app/services/koyo_repl_handler.rb'
-      copy("#{template_path}/koyo_repl_handler.txt",
-           "#{rails_path}/app/models/koyo_repl_handler.rb")
+      copy("#{template_path}/koyo_repl_handler_service.txt",
+           "#{rails_path}/app/models/koyo_repl_handler_service.rb")
 
-      puts 'Adding app/models/koyo_repl_model_example.rb'
       copy("#{template_path}/koyo_repl_handler.txt",
            "#{rails_path}/app/models/koyo_repl_model_example.rb")
       puts '-' * 80
@@ -37,6 +34,7 @@ module Koyo::Repl
 
     def copy(from_fname, to_fname)
       return if file_exists?(to_fname)
+      puts "ADDING #{to_fname}"
       dir_name = File.dirname(to_fname)
       FileUtils.mkdir_p(dir_name)
       FileUtils.cp(from_fname, to_fname.gsub('.txt', '.rb'))

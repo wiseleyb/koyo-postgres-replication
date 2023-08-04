@@ -37,6 +37,7 @@ module Koyo::Repl
         tick_tock
         run!
       rescue StandardError => e
+        Koyo::Repl::EventHandlerService.koyo_error(e)
         msg = "Error in ReplPostgresServer: #{e.message}"
         log_repl_error(msg, err: e)
         sleep Koyo::Repl.config.sql_delay
@@ -62,11 +63,10 @@ module Koyo::Repl
         rows = Koyo::Repl::Data.new(sql_res).rows # returns ReplDataRow
         rows.each do |row|
           log_repl_debug(row.to_yaml)
-          # handle catch all if it exists
-          if Koyo::Repl.config.handler_klass
-            Koyo::Repl.config.handler_klass.constantize
-                      .koyo_handle_all_replication(row)
-          end
+          # catch all for all events (allows rails project to use this
+          # instead of models
+          Koyo::Repl::EventHandlerService.koyo_handle_all_replication(row)
+
           next unless tables.include?(row.table)
 
           # handle model callbacks
@@ -74,6 +74,7 @@ module Koyo::Repl
           mname = klass.send("#{TABLE_METHOD_NAME}_method")
           klass.send(mname, row)
         rescue StandardError => e
+          Koyo::Repl::EventHandlerService.koyo_error(e)
           log_repl_error('Unexpected Error in ReplServer.check', err: e)
         end
       end
@@ -121,6 +122,7 @@ module Koyo::Repl
       rescue NameError # filters out stuff like SchemaMigration
         log_repl_info("Init: ignoring model #{klass_name}")
       rescue StandardError => e
+        Koyo::Repl::EventHandlerService.koyo_error(e)
         log_repl_error('Unexpected Error in '\
             'ReplServer.tables_that_handle_koyo_replication',
             err: e)

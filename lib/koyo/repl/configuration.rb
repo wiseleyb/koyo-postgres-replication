@@ -19,18 +19,6 @@ module Koyo::Repl
       Koyo::Repl::Utils.to_bool(val)
     end
 
-    # Will call this to handle all replication events (see README)
-    # Example for this could be something like
-    # class KoyoReplHandler
-    #   def self.koyo_handle_all_replication(row); end
-    # end
-    # ENV['KOYO_REPL_HANDLER_KLASS'] = 'KoyoReplHandler'
-    def handler_klass
-      @handler_klass ||
-        ENV["#{config_prefix}_HANDLER_KLASS"] ||
-        'KoyoReplHandler'
-    end
-
     # overrides the default prefix of ENV variables
     def config_prefix
       @config_prefix || ENV['KOYO_REPL_CONFIG_PREFIX'] || 'KOYO_REPL'
@@ -39,6 +27,8 @@ module Koyo::Repl
     def db_conn_name
       @db_conn || ENV["#{config_prefix}_DB_CONN_NAME"]
     end
+
+    # TODO: refactor this out of the config class
     # DB connection name in config/database.yml. Defaults to Rails.env
     # (so standard connection on most rails app). We add this because you need
     # admin priveleges to use replication and some companies have problems with
