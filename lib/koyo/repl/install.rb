@@ -19,7 +19,7 @@ module Koyo::Repl
       copy("#{template_path}/koyo_repl_handler_service.txt",
            "#{rails_path}/app/models/koyo_repl_handler_service.rb")
 
-      copy("#{template_path}/koyo_repl_handler.txt",
+      copy("#{template_path}/koyo_repl_model_example.txt",
            "#{rails_path}/app/models/koyo_repl_model_example.rb")
       puts '-' * 80
     end
