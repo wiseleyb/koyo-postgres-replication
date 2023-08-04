@@ -4,14 +4,25 @@
 # (instead of doing this in models)
 class KoyoReplHandlerService < Koyo::Repl::EventHandlerService
   class << self
-    # example row:
-    # User.handle_replcation called
-    # TODO: Add link to class returned
+    # This is called for every create/update/delete action called on any table
+    # This can be used if you want to process all replication in one place
+    # instead of using the model level mixins. See README
+    # For an app with a lot of DB churn you want this to be as fast as possible
+    # You don't want do API calls from here, and shouldn't do DB updates from 
+    # here (but if you do, be super careful of infinite loops)
     # def koyo_handle_all_replication(row)
+    #   case row.table
+    #   when 'users'
+    #     # do something with user like
+    #     # ElasticSearchUpdaterServer.perform_async(row.id)
+    #     # or grab the user record
+    #     # user = User.find(row.id)
+    #   end
     #   super
     # end
 
     # Called whenever an error is raised in Koyo::Repl code
+    # Examples would be to log to Slack, or restart something that's crashed
     # def koyo_error(err)
     #   super
     # end
@@ -21,7 +32,7 @@ class KoyoReplHandlerService < Koyo::Repl::EventHandlerService
     # source=KoyoReplication logid=d7f1f0bb2a
     #   message=Init: Finding models that support koyo_repl_handler
     # You can use this as a catch all for any log event or use methods
-    # below if that's easier
+    # below if that's easier. You could use this for monitoring type activites
     # def koyo_log_event(message, log_level)
     #   super
     # end
