@@ -40,3 +40,4 @@ View docs: `yard server` then open https://localhost:8808
 * add monitoring helpers
 * add diagnostic tool (checks permissions, postgres, etc)
 * [yard docs](https://gnuu.org/2009/11/21/generate-yard-docs-for-your-gem/)
+* add badges like in https://raw.githubusercontent.com/rubocop/rubocop/master/README.md
