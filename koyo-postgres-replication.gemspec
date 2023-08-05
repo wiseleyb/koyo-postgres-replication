@@ -42,7 +42,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'pg', '~> 1.1'
-  spec.add_dependency 'rails', '~> 7.0.0'
+  spec.add_dependency 'rails', '~> 7.0'
   spec.add_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'yard'
