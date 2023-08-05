@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Koyo
+  # Main replication namespace
   module Repl
     require_relative 'koyo/repl/configuration'
     require_relative 'koyo/repl/data'
@@ -14,13 +15,13 @@ module Koyo
     require_relative 'koyo/repl/utils'
     require_relative 'koyo/repl/version'
 
-    require_relative 'koyo/repl/railtie' #if defined?(Rails)
+    require_relative 'koyo/repl/railtie' # if defined?(Rails)
 
     def self.config
-      @configuration ||= Configuration.new
+      @config ||= Configuration.new
     end
 
-    def self.configure(&block)
+    def self.configure
       yield(config)
     end
   end

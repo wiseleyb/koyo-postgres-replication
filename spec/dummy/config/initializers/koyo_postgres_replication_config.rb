@@ -1,19 +1,10 @@
+# frozen_string_literal: true
+
 Koyo::Repl.configure do |config|
   # Create the replication slot if it doesn't exist. Defaults to true
-  # You can set this with an ENV as well: 
+  # You can set this with an ENV as well:
   #   KOYO_REPL_AUTO_CREATE_REPLICATION_SLOT
   # config.auto_create_replication_slot = true
-
-  # You can configure a default catch all class that will be called for
-  # all replication events. This can be used in combination with model level
-  # calls. The class must support koyo_handle_all_replication(row) method.
-  # Example:
-  #   class CatchAll
-  #     def self.koyo_handle_all_replication(row); end
-  #   end
-  # You can set this with an ENV as well: 
-  #   KOYO_REPL_HANDLER_KLASS
-  # config.handler_klass = 'KoyoReplHandlers'
 
   # Allows you to override the prefix used if you're using ENV to configure
   # things. Defaults to KOYO_REPL
@@ -24,12 +15,12 @@ Koyo::Repl.configure do |config|
   # admin priveleges to use replication and some companies have problems with
   # this. Whatever this is called it will have Rails.env tacked on so if it's
   # replication - the connection would be "replciation_#{Rails.env}"
-  # You can set this with an ENV as well: 
+  # You can set this with an ENV as well:
   #   KOYO_REPL_DB_CONN
   # config.db_conn = 'replication'
 
   # Disable logging. Not recommended.
-  # You can set this with an ENV as well: 
+  # You can set this with an ENV as well:
   #   KOYO_REPL_DISABLE_LOGGING
   # config.disable_logging = true
 
@@ -41,7 +32,7 @@ Koyo::Repl.configure do |config|
   #  from pg_replication_slots
   #  where
   #    and plugin = 'wal2json'
-  # You can set this with an ENV as well: 
+  # You can set this with an ENV as well:
   #   KOYO_REPL_SLOT
   # config.slot = "koyo_repl_#{Rails.env}"
 
@@ -49,7 +40,7 @@ Koyo::Repl.configure do |config|
   # Note: that if there 10,000 things on the replciation-queue it will
   # process all of those as fast as possible, then pause for this many
   # seconds before re-checking the replication-queue
-  # You can set this with an ENV as well: 
+  # You can set this with an ENV as well:
   #   KOYO_REPL_SQL_DELAY
   # config.sql_delay = 1
 
@@ -59,7 +50,7 @@ Koyo::Repl.configure do |config|
   # Read (when this is true):
   #   removes data from the postgres-replication queue
   # Defaults to false
-  # You can set this with an ENV as well: 
+  # You can set this with an ENV as well:
   #   KOYO_REPL_TEST_MODE
   # config.test_mode = false
 end

@@ -1,46 +1,54 @@
 # frozen_string_literal: true
-module Koyo::Repl
-  # Class wrapper for replication data row
-  class DataRow
-    attr_accessor :data,          # raw json of row - see example below
-                  :kind,          # insert/update/delete
-                  :schema,        # always public for this - not needed
-                  :table,         # table being changed
-                  :id,            # table.id
-                  :id_type,       # integer/uuid
-                  :columns,       # all columns from table - array
-                  :column_types,  # all types of columns - array
-                  :values         # all values from table - array
 
-    def initialize(data)
-      @data = data
-      @kind = @data['kind']
-      @schema = @data['schema']
-      @table = @data['table']
-      @columns = @data['columnnames']
-      @column_types = @data['columntypes']
-      @values = @data['columnvalues']
+module Koyo
+  module Repl
+    # Class wrapper for replication data row
+    class DataRow
+      attr_accessor :data,          # raw json of row - see example below
+                    :kind,          # insert/update/delete
+                    :schema,        # always public for this - not needed
+                    :table,         # table being changed
+                    :id,            # table.id
+                    :id_type,       # integer/uuid
+                    :columns,       # all columns from table - array
+                    :column_types,  # all types of columns - array
+                    :values         # all values from table - array
+
+      def initialize(data)
+        @data = data
+        @kind = @data['kind']
+        @schema = @data['schema']
+        @table = @data['table']
+        @columns = @data['columnnames']
+        @column_types = @data['columntypes']
+        @values = @data['columnvalues']
+        check_set_primary_keys
+      end
 
       # TODO: this breaks for multiple primary keys
-      if @data['oldkeys']
-        raise "This doesn't support multiple keys right now" if @data['oldkeys']['keynames'].size > 1
+      def check_set_primary_keys
+        if @data['oldkeys']
+          if @data['oldkeys']['keynames'].size > 1
+            raise "This doesn't support multiple keys right now"
+          end
 
-        @id = @data['oldkeys']['keyvalues'].first
-        @id_type = @data['oldkeys']['keytypes'].first
-      else
-        @id = val(:id)
-        @id_type = type(:id)
+          @id = @data['oldkeys']['keyvalues'].first
+          @id_type = @data['oldkeys']['keytypes'].first
+        else
+          @id = val(:id)
+          @id_type = type(:id)
+        end
       end
-    end
 
-    # gets a value for a name from columnsvalues
-    def val(name)
-      values[columns.index(name.to_s)]
-    end
+      # gets a value for a name from columnsvalues
+      def val(name)
+        values[columns.index(name.to_s)]
+      end
 
-    # get a val type from columntypes
-    def type(name)
-      column_types[columns.index(name.to_s)]
+      # get a val type from columntypes
+      def type(name)
+        column_types[columns.index(name.to_s)]
+      end
     end
   end
 end

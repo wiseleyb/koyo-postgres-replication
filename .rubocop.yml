@@ -1,0 +1,22 @@
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 90
+
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'spec/dummy/config/**/*'

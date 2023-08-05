@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class KoyoReplHandler
   # example row:
   # User.handle_replcation called

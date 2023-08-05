@@ -4,17 +4,6 @@ Koyo::Repl.configure do |config|
   #   KOYO_REPL_AUTO_CREATE_REPLICATION_SLOT
   # config.auto_create_replication_slot = true
 
-  # You can configure a default catch all class that will be called for
-  # all replication events. This can be used in combination with model level
-  # calls. The class must support koyo_handle_all_replication(row) method.
-  # Example:
-  #   class CatchAll
-  #     def self.koyo_handle_all_replication(row); end
-  #   end
-  # You can set this with an ENV as well: 
-  #   KOYO_REPL_HANDLER_KLASS
-  # config.handler_klass = 'KoyoReplHandlers'
-
   # Allows you to override the prefix used if you're using ENV to configure
   # things. Defaults to KOYO_REPL
   # config.config_prefix = 'KOYO_REPL'
