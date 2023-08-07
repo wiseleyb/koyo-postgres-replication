@@ -17,7 +17,7 @@ module Koyo
                                            NULL,
                                            NULL,
                                            'pretty-print',
-                                           '1')
+                                           '1');
         )
           exec_sql(sql)
         end
