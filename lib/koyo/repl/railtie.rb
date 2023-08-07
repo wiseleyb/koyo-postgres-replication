@@ -2,7 +2,7 @@
 
 # require 'koyo_postgres_replication'
 require 'rails'
-require 'koyo'
+#require 'koyo'
 
 module Koyo
   module Repl

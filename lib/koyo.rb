@@ -12,10 +12,9 @@ module Koyo
     require_relative 'koyo/repl/log'
     require_relative 'koyo/repl/mod'
     require_relative 'koyo/repl/postgres_server'
+    require_relative 'koyo/repl/railtie' # if defined?(Rails)
     require_relative 'koyo/repl/utils'
     require_relative 'koyo/repl/version'
-
-    require_relative 'koyo/repl/railtie' # if defined?(Rails)
 
     def self.config
       @config ||= Configuration.new
