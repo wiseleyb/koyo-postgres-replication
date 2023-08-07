@@ -35,18 +35,34 @@ module Koyo
       end
 
       def run!
+        trap("SIGINT") { throw :done }
+
         catch(:done) do
           check
           sleep Koyo::Repl.config.sql_delay
           tick_tock
           run!
+        # Possibly fatal errors
+        rescue ActiveRecord::StatementInvalid => e
+          if e.cause.exception.is_a?(PG::ConnectionBad)
+            Koyo::Repl::EventHandlerService.koyo_error(e)
+            msg = "SHUTTING DOWN. Fatal Error in ReplPostgresServer: #{e.message}"
+            log_repl_fatal(msg, err: e)
+          else
+            log_recoverable_error(e)
+            run!
+          end
         rescue StandardError => e
-          Koyo::Repl::EventHandlerService.koyo_error(e)
-          msg = "Error in ReplPostgresServer: #{e.message}"
-          log_repl_error(msg, err: e)
-          sleep Koyo::Repl.config.sql_delay
+          log_recoverable_error(e)
           run!
         end
+      end
+
+      def log_recoverable_error(e)
+        Koyo::Repl::EventHandlerService.koyo_error(e)
+        msg = "Error in ReplPostgresServer: #{e.message}"
+        log_repl_error(msg, err: e)
+        sleep Koyo::Repl.config.sql_delay
       end
 
       def tick_tock
