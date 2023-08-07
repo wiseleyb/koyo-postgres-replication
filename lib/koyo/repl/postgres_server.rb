@@ -108,10 +108,10 @@ module Koyo
         end
 
         # check if any tables are setup to handle replication events
-        unless tables.present?
-          errs << "Error: No models implement self.#{TABLE_METHOD_NAME}. "\
-                  'See koyo-postgres-replication gem for how to set this up.'
-        end
+        #unless tables.present?
+        #  errs << "Error: No models implement self.#{TABLE_METHOD_NAME}. "\
+        #          'See koyo-postgres-replication gem for how to set this up.'
+        #end
 
         # if there were any errors - let user know we're shutting down
         errs << 'Shutting down' unless errs.empty?
