@@ -20,3 +20,4 @@ AllCops:
   DisplayCopNames: true
   Exclude:
     - 'spec/dummy/config/**/*'
+    - 'spec/dummy/db/**/*'
