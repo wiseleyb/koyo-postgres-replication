@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# require 'koyo_postgres_replication'
 require 'rails'
-#require 'koyo'
 
 module Koyo
   module Repl

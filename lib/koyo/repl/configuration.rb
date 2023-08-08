@@ -18,7 +18,7 @@ module Koyo
         val = @auto_create_replication_slot ||
               ENV["#{config_prefix}_AUTO_CREATE_REPLICATION_SLOT"] ||
               'true'
-        Koyo::Repl::Utils.to_bool(val)
+        Koyo::Repl::Database.to_bool(val)
       end
 
       # overrides the default prefix of ENV variables
@@ -61,7 +61,7 @@ module Koyo
       # Disables logging
       # Defaults to false
       def disable_logging
-        Koyo::Repl::Utils.to_bool(@disable_logging ||
+        Koyo::Repl::Database.to_bool(@disable_logging ||
                                   ENV["#{config_prefix}_DISABLE_LOGGING"])
       end
 
@@ -93,7 +93,7 @@ module Koyo
       # Defaults to false
       def test_mode
         val = @test_mode || ENV["#{config_prefix}_TEST_MODE"]
-        Koyo::Repl::Utils.to_bool(val)
+        Koyo::Repl::Database.to_bool(val)
       end
 
       def to_h

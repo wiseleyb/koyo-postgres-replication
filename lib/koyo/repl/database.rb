@@ -4,7 +4,7 @@ module Koyo
   module Repl
     # Basic utilities for postgres replication
     # Doc https://www.postgresql.org/docs/9.4/logicaldecoding-example.html
-    class Utils
+    class Database
       class << self
         # Reads from the replication slot.
         # Reading from this marks the rows read (so you won't see them again)

@@ -26,7 +26,7 @@ module Koyo
       def initialize
         @test_mode = Koyo::Repl.config.test_mode
         if Koyo::Repl.config.auto_create_replication_slot
-          Koyo::Repl::Utils.create_replication_slot!
+          Koyo::Repl::Database.create_replication_slot!
         end
         @tables = Koyo::Repl::PostgresServer.tables_that_handle_koyo_replication
         @errs = []
@@ -35,7 +35,8 @@ module Koyo
       end
 
       def run!
-        trap("SIGINT") { throw :done }
+        # This allows us to catch ctrl-c and exit
+        trap('SIGINT') { throw :done }
 
         catch(:done) do
           check
@@ -58,10 +59,10 @@ module Koyo
         end
       end
 
-      def log_recoverable_error(e)
-        Koyo::Repl::EventHandlerService.koyo_error(e)
-        msg = "Error in ReplPostgresServer: #{e.message}"
-        log_repl_error(msg, err: e)
+      def log_recoverable_error(err)
+        Koyo::Repl::EventHandlerService.koyo_error(err)
+        msg = "Error in ReplPostgresServer: #{err.message}"
+        log_repl_error(msg, err: err)
         sleep Koyo::Repl.config.sql_delay
       end
 
@@ -88,9 +89,9 @@ module Koyo
 
       def read_sql_results
         if test_mode
-          Koyo::Repl::Utils.peek_slot
+          Koyo::Repl::Database.peek_slot
         else
-          Koyo::Repl::Utils.read_slot!
+          Koyo::Repl::Database.read_slot!
         end
       end
 
@@ -118,16 +119,10 @@ module Koyo
         @errs = []
 
         # check if replication slot is setup
-        unless Koyo::Repl::Utils.replication_slot_exists?
+        unless Koyo::Repl::Database.replication_slot_exists?
           errs << "Error: Replication Slot doesn't exist. "\
                    'See koyo-postgres-replication gem for how to set this up.'
         end
-
-        # check if any tables are setup to handle replication events
-        #unless tables.present?
-        #  errs << "Error: No models implement self.#{TABLE_METHOD_NAME}. "\
-        #          'See koyo-postgres-replication gem for how to set this up.'
-        #end
 
         # if there were any errors - let user know we're shutting down
         errs << 'Shutting down' unless errs.empty?

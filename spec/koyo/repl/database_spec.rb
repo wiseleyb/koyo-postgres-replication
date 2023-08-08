@@ -2,9 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe Koyo::Repl::Utils, type: :service do
+RSpec.describe Koyo::Repl::Database, type: :service do
   let(:user) { build(:user) }
-  let(:subject) { Koyo::Repl::Utils }
+  let(:subject) { Koyo::Repl::Database }
 
   # this clears any garbage left over in the replication slot
   before do

@@ -73,6 +73,6 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
   config.before(:suite) do
-    Koyo::Repl::Utils.create_replication_slot!
+    Koyo::Repl::Database.create_replication_slot!
   end
 end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#require 'fileutils'
-
 module Koyo
   module Repl
     # Provides state and debugging info for Repl setup

@@ -6,7 +6,7 @@ RSpec.describe Koyo::Repl::DataRow, type: :service do
   # simple smoke test
   it 'works' do
     u = create(:user)
-    sql_results = Koyo::Repl::Utils.read_slot!
+    sql_results = Koyo::Repl::Database.read_slot!
     sql_res = sql_results.first
     row = Koyo::Repl::Data.new(sql_res).rows.first
     expect(row.kind).to eq('insert')

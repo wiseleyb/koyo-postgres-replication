@@ -27,13 +27,13 @@ module Koyo
                     :lsn, # ???
                     :xid  # uniq id of row returned
 
-      # takes a row from ReplUtils.(peek_slot/read_slot!)
+      # takes a row from ReplDatabase.(peek_slot/read_slot!)
       def initialize(row)
         @row = row
         @lsn = row['lsn']
         @xid = row['xid']
         # TODO: find faster JSON lib for this
-        @data_rows = Koyo::Repl::Utils.parse_json(row['data'])['change']
+        @data_rows = Koyo::Repl::Database.parse_json(row['data'])['change']
       end
 
       def rows

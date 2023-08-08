@@ -21,7 +21,7 @@ module Koyo
       end
 
       def replication_slot_exists?
-        Koyo::Repl::Utils.replication_slot_exists?
+        Koyo::Repl::Database.replication_slot_exists?
       rescue StandardError => e
         "Error: #{e.message}"
       end
@@ -40,14 +40,14 @@ module Koyo
       end
 
       def can_access_replication_slot?
-        Koyo::Repl::Utils.peek_slot
+        Koyo::Repl::Database.peek_slot
         true
       rescue StandardError => e
         "Error: #{e.message}"
       end
 
       def repl_count
-        Koyo::Repl::Utils.replication_slot_count
+        Koyo::Repl::Database.replication_slot_count
       rescue StandardError => e
         "Error: #{e.message}"
       end
@@ -59,7 +59,7 @@ module Koyo
       end
 
       def wal_level
-        Koyo::Repl::Utils.wal_level
+        Koyo::Repl::Database.wal_level
       rescue StandardError => e
         "Error: #{e.message}"
       end

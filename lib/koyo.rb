@@ -5,6 +5,7 @@ module Koyo
   module Repl
     require_relative 'koyo/repl/configuration'
     require_relative 'koyo/repl/data'
+    require_relative 'koyo/repl/database'
     require_relative 'koyo/repl/data_row'
     require_relative 'koyo/repl/diagnostics'
     require_relative 'koyo/repl/event_handler_service'
@@ -13,7 +14,6 @@ module Koyo
     require_relative 'koyo/repl/mod'
     require_relative 'koyo/repl/postgres_server'
     require_relative 'koyo/repl/railtie' # if defined?(Rails)
-    require_relative 'koyo/repl/utils'
     require_relative 'koyo/repl/version'
 
     def self.config
