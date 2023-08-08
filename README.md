@@ -1,5 +1,40 @@
 # Koyo::Postgres::Replication
 
+## Quick Start
+
+I'd recommend using the Docker method (see below) but for a plain Rails-7 project
+
+Add to Gemfile:
+
+```
+gem 'koyo-postgres-replication', 
+    git: 'https://github.com/wiseleyb/koyo-postgres-replication',
+    require: 'koyo'
+```
+
+Then:
+
+```
+bundle install
+bundle exec rake koyo:repl:install
+
+# runs basic diagnostics - look for Error in this list and fix any issues
+bundle exec rake koyo:repl:diagnostics
+
+# run the server
+bundle exec rake koyo:repl:run_server
+
+# You should now be getting replication events in
+# app/models/koyo_repl_handler_server.rb#koyo_handle_all_replication(row)
+# when you create/update/delete any record
+
+# You should see output in the server window when you change database rows
+```
+
+## Technical 
+
+Created initial gem with
+
 ```
 rails plugin new koyo-postgres-replication \
     --mountable \

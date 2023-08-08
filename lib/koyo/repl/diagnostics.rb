@@ -27,7 +27,19 @@ module Koyo
       end
 
       def registered_tables
-        Koyo::Repl::PostgresServer.tables_that_handle_koyo_replication || {}
+        res =
+          Koyo::Repl::PostgresServer.tables_that_handle_koyo_replication || {}
+        if res == {}
+          res = {
+            warning: 'No tables registered - see example file in '\
+                     'app/models/koyo_repl_model_example.rb to see '\
+                     'how to monitor replication for a table from a model. '\
+                     'This is optional - you can just use '\
+                     'app/models/koyo_repl_handler_service.rb as a catch all '\
+                     'for all replication events if you want.'
+          }
+        end
+        res
       rescue StandardError => e
         "Error: #{e.message}"
       end

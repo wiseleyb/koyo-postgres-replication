@@ -6,7 +6,9 @@ module Koyo
     # can be run with rake koyo::repl::diagnostics
     class Install
       def self.copy!
-        Koyo::Repl::Install.new.copy!
+        kri = Koyo::Repl::Install.new
+        kri.copy!
+        kri.drop_create_slot!
       end
 
       def copy!
@@ -22,6 +24,11 @@ module Koyo
         copy("#{template_path}/koyo_repl_model_example.txt",
              "#{rails_path}/app/models/koyo_repl_model_example.rb")
         puts '-' * 80
+      end
+
+      def drop_create_slot!
+        Koyo::Repl::Database.delete_replication_slot!
+        Koyo::Repl::Database.create_replication_slot!
       end
 
       def file_exists?(fname)
