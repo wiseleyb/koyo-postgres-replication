@@ -12,8 +12,8 @@ module Koyo
       end
 
       def copy!
-        puts ''
-        puts '-' * 80
+        debugp ''
+        debugp '-' * 80
         copy("#{template_path}/koyo_postgres_replication_config.txt",
              "#{rails_path}/config/initializers/"\
                'koyo_postgres_replication_config.rb')
@@ -23,7 +23,11 @@ module Koyo
 
         copy("#{template_path}/koyo_repl_model_example.txt",
              "#{rails_path}/app/models/koyo_repl_model_example.rb")
-        puts '-' * 80
+        debugp '-' * 80
+      end
+
+      def debugp(msg)
+        puts msg unless Rails.env.test? # don't pollute spec output
       end
 
       def drop_create_slot!

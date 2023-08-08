@@ -57,7 +57,7 @@ module Koyo
         def log_repl_key_value(logid, log_level, key, val)
           msg = "source=KoyoReplication logid=#{logid} level=#{log_level} "\
                 "#{key}=#{val}"
-          puts msg
+          puts msg unless Rails.env.test? # don't pollute test output
           check_log_level(log_level)
           Rails.logger.send(log_level, msg)
           Koyo::Repl::EventHandlerService.koyo_log_event(msg, log_level)

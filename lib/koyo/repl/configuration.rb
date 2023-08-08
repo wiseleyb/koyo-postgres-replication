@@ -74,7 +74,9 @@ module Koyo
       #  where
       #    and plugin = 'wal2json'
       def slot
-        @slot || ENV["#{config_prefix}_SLOT"] || "koyo_repl_#{Rails.env}"
+        @slot ||
+          ENV["#{config_prefix}_SLOT"] ||
+          "koyo_repl_#{Koyo::Repl::Database.current_db_name}_#{Rails.env}"
       end
 
       # Time to wait before checking Replication Slot again in seconds

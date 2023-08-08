@@ -56,9 +56,32 @@ module Koyo
           from pg_replication_slots
           where
             slot_name = '#{config_slot}'
+            and database = '#{current_db_name}'
             and plugin = 'wal2json'
         )
           exec_sql(sql).first['count'].to_i.positive?
+        end
+
+        # Returns all replication slots on the system that support wal2json
+        def replication_slot
+          sql = %(
+          select *
+          from pg_replication_slots
+          where plugin = 'wal2json'
+          and slot_name = '#{config_slot}'
+          and database = '#{current_db_name}'
+        )
+          exec_sql(sql).first
+        end
+
+        # Returns all replication slots on the system that support wal2json
+        def replication_slots
+          sql = %(
+          select *
+          from pg_replication_slots
+          where plugin = 'wal2json'
+        )
+          exec_sql(sql)
         end
 
         # Creates a replication slot. You need admin priveleges for this.
@@ -84,6 +107,10 @@ module Koyo
         def wal_level
           sql = %(show wal_level)
           exec_sql(sql).first['wal_level']
+        end
+
+        def current_db_name
+          Rails.configuration.database_configuration[Rails.env]['database']
         end
 
         # This requires admin permissions, requires restarting your system
