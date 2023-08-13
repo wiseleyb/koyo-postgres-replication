@@ -47,13 +47,13 @@ module Koyo
       end
 
       # Gets a value for a name from columnsvalues
-      # @param :name Calumn name
+      # @param name column name
       def val(name)
         values[columns.index(name.to_s)]
       end
 
       # Get a val type from columntypes
-      # @param Column name
+      # @param name column name
       def type(name)
         column_types[columns.index(name.to_s)]
       end

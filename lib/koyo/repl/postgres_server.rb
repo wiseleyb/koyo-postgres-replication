@@ -16,11 +16,11 @@ module Koyo
                     :test_mode, # when true - only peeks at slot
                     :errs # collects error messages - these are sent to log
 
-      attr_writer :tick_tock # just outputs something in logs
-                             # every minute
+      attr_writer :tick_tock # just outputs something in logs every minute
 
       # Method name to look for in models that support this
-      # @see https://github.com/wiseleyb/koyo-postgres-replication/wiki/Model-call-backs Model callbacks
+      # @see Model callbacks
+      # https://github.com/wiseleyb/koyo-postgres-replication/wiki/Model-call-backs
       TABLE_METHOD_NAME = :koyo_repl_handler
 
       # Runs the server. You should only be running ONE of these
@@ -112,8 +112,9 @@ module Koyo
       end
 
       # Processes a row from the replication slot
-      # @param :row DataRow
-      # @see https://github.com/wiseleyb/koyo-postgres-replication/wiki/Koyo::Repl::DataRow-data-spec for details on row
+      # @param row Koyo::Repl::DataRow
+      # @see For details on row
+      # https://github.com/wiseleyb/koyo-postgres-replication/wiki/Koyo::Repl::DataRow-data-spec
       def check_row(row)
         log_repl_debug(row.to_yaml)
         # catch all for all events (allows rails project to use this
@@ -133,7 +134,7 @@ module Koyo
 
       # Checks basics to see if we can run
       # Logs errors (should be visible in whatever is running the server
-      # @return true (can run) or false (can't run)
+      # @return true can run when true or false (can't run)
       def can_run?
         @errs = []
 
