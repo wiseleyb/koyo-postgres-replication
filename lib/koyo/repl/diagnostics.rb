@@ -45,7 +45,7 @@ module Koyo
       end
 
       def can_connect?
-        Koyo::Repl.config.db_conn.execute('select now()')
+        Koyo::Repl::Database.conn.execute('select now()')
         true
       rescue StandardError => e
         "Error: #{e.message}"
@@ -65,7 +65,7 @@ module Koyo
       end
 
       def adapter_name
-        Koyo::Repl.config.db_conn.adapter_name
+        Koyo::Repl::Datasbase.conn.adapter_name
       rescue StandardError => e
         "Error: #{e.message}"
       end

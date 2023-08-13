@@ -7,6 +7,34 @@ module Koyo
     # https://www.postgresql.org/docs/9.4/logicaldecoding-example.html
     class Database
       class << self
+        # TODO: refactor this out of the config class
+        # DB connection name in config/database.yml. Defaults to Rails.env
+        # (so standard connection on most rails app). We add this because you need
+        # admin priveleges to use replication and some companies have problems with
+        # this. Whatever this is called it will have Rails.env tacked on so if it's
+        # replication - the connection would be "replciation_#{Rails.env}"
+        def conn
+          return @conn if @conn
+
+          conn_name = Koyo::Repl.config.database_name
+
+          unless conn_name
+            @conn = ActiveRecord::Base.connection
+            return @conn
+          end
+
+          conn_name = "#{conn_name}_#{Rails.env}"
+
+          msg = "source=KoyoReplication Connecting to #{conn_name}"
+          Rails.logger.info msg
+
+          config =
+            ApplicationRecord.configurations.find_db_config(conn_name)
+          ActiveRecord::Base.establish_connection config
+          @conn = ActiveRecord::Base.connection
+          @conn
+        end
+
         # Reads from the replication slot.
         # Reading from this marks the rows read (so you won't see them again)
         # For testing you can use `peek_slot` if you want to - which will keep
@@ -128,7 +156,7 @@ module Koyo
         # Runs SQL commands
         def exec_sql(sql)
           # ActiveRecord::Base.connection.execute(sql)
-          Koyo::Repl.config.db_conn.execute(sql)
+          conn.execute(sql)
         end
 
         # wrap this to support faster JSON parsing in the future
