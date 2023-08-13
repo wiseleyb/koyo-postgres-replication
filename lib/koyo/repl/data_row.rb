@@ -2,9 +2,12 @@
 
 module Koyo
   module Repl
-    # Class wrapper for replication data row
+    # Class wrapper for replication row row
+    # @see
+    # https://github.com/wiseleyb/koyo-postgres-replication/wiki/Koyo::Repl::DataRow-row-spec
+    # @see For details on row
     class DataRow
-      attr_accessor :data,          # raw json of row - see example below
+      attr_accessor :row,           # raw json of row - see example below
                     :kind,          # insert/update/delete
                     :schema,        # always public for this - not needed
                     :table,         # table being changed
@@ -14,38 +17,43 @@ module Koyo
                     :column_types,  # all types of columns - array
                     :values         # all values from table - array
 
-      def initialize(data)
-        @data = data
-        @kind = @data['kind']
-        @schema = @data['schema']
-        @table = @data['table']
-        @columns = @data['columnnames']
-        @column_types = @data['columntypes']
-        @values = @data['columnvalues']
+      # Initialized attributes
+      def initialize(row)
+        @row = row
+        @kind = @row['kind']
+        @schema = @row['schema']
+        @table = @row['table']
+        @columns = @row['columnnames']
+        @column_types = @row['columntypes']
+        @values = @row['columnvalues']
         check_set_primary_keys
       end
 
-      # TODO: this breaks for multiple primary keys
+      # This doesn't work for multiple primary keys right now
+      #
+      # WARN: this breaks for multiple primary keys
       def check_set_primary_keys
-        if @data['oldkeys']
-          if @data['oldkeys']['keynames'].size > 1
+        if @row['oldkeys']
+          if @row['oldkeys']['keynames'].size > 1
             raise "This doesn't support multiple keys right now"
           end
 
-          @id = @data['oldkeys']['keyvalues'].first
-          @id_type = @data['oldkeys']['keytypes'].first
+          @id = @row['oldkeys']['keyvalues'].first
+          @id_type = @row['oldkeys']['keytypes'].first
         else
           @id = val(:id)
           @id_type = type(:id)
         end
       end
 
-      # gets a value for a name from columnsvalues
+      # Gets a value for a name from columnsvalues
+      # @param :name Calumn name
       def val(name)
         values[columns.index(name.to_s)]
       end
 
-      # get a val type from columntypes
+      # Get a val type from columntypes
+      # @param Column name
       def type(name)
         column_types[columns.index(name.to_s)]
       end
@@ -53,7 +61,7 @@ module Koyo
   end
 end
 
-#   Example data packet
+#   Example row packet
 #
 #   {
 #   "change": [

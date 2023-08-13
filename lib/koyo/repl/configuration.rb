@@ -3,6 +3,9 @@
 module Koyo
   module Repl
     # Supports config/initializer or ENV and adds defaults
+    # lib/koyo/repl/templates/koyo_postges_replication_config is
+    # copied to config/initializers when `rake koyo:repl:install` is
+    # run.
     class Configuration
       attr_writer :auto_create_replication_slot,
                   :config_prefix,
@@ -21,11 +24,17 @@ module Koyo
         Koyo::Repl::Database.to_bool(val)
       end
 
-      # overrides the default prefix of ENV variables
+      # Overrides the default prefix of ENV variables
       def config_prefix
         @config_prefix || ENV['KOYO_REPL_CONFIG_PREFIX'] || 'KOYO_REPL'
       end
 
+      # Name of config/database.yml connection to use for replication
+      #
+      # Since this requires admin priveleges you might want to use
+      # a different connection to prevent all rails actions having
+      # admin priveleges to your DB. Default to whatever the default
+      # DB is for the project
       def db_conn_name
         @db_conn || ENV["#{config_prefix}_DB_CONN_NAME"]
       end
@@ -58,14 +67,16 @@ module Koyo
         @conn
       end
 
-      # Disables logging
+      # Disables logging (not recommended)
       # Defaults to false
       def disable_logging
         Koyo::Repl::Database.to_bool(@disable_logging ||
-                                  ENV["#{config_prefix}_DISABLE_LOGGING"])
+          ENV["#{config_prefix}_DISABLE_LOGGING"])
       end
 
-      # Replication Slot name - can be any string
+      # Replication Slot name - can be any string - but must be
+      # unique to your database server.
+      #
       # This is the name of the replication slot in postgres
       # You can check replication slots that exist with:
       #
@@ -98,6 +109,7 @@ module Koyo
         Koyo::Repl::Database.to_bool(val)
       end
 
+      # Helper method that converts config settings into a hash
       def to_h
         {
           auto_create_replication_slot: auto_create_replication_slot,
@@ -109,6 +121,7 @@ module Koyo
         }
       end
 
+      # Helper method that converts config settings into a string
       def to_s
         to_h.map { |k, v| "#{k}: #{v}" }.join("\n")
       end
