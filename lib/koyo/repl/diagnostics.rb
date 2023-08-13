@@ -20,12 +20,15 @@ module Koyo
         ]
       end
 
+      # Checks if replication slot exists.
+      # TODO: maybe this should create if it doesn't?
       def replication_slot_exists?
         Koyo::Repl::Database.replication_slot_exists?
       rescue StandardError => e
         "Error: #{e.message}"
       end
 
+      # Returns list of models that have registered a call back
       def registered_tables
         res =
           Koyo::Repl::PostgresServer.tables_that_handle_koyo_replication || {}
@@ -44,13 +47,15 @@ module Koyo
         "Error: #{e.message}"
       end
 
+      # Checks connection to database
       def can_connect?
-        Koyo::Repl.config.db_conn.execute('select now()')
+        Koyo::Repl::Database.conn.execute('select now()')
         true
       rescue StandardError => e
         "Error: #{e.message}"
       end
 
+      # Checks access/permissions to replication slot
       def can_access_replication_slot?
         Koyo::Repl::Database.peek_slot
         true
@@ -58,24 +63,28 @@ module Koyo
         "Error: #{e.message}"
       end
 
+      # Checks that replication slot exists
       def repl_count
         Koyo::Repl::Database.replication_slot_count
       rescue StandardError => e
         "Error: #{e.message}"
       end
 
+      # Returns configured database name
       def adapter_name
-        Koyo::Repl.config.db_conn.adapter_name
+        Koyo::Repl::Datasbase.conn.adapter_name
       rescue StandardError => e
         "Error: #{e.message}"
       end
 
+      # Returns configured wal_level. Should be "logical"
       def wal_level
         Koyo::Repl::Database.wal_level
       rescue StandardError => e
         "Error: #{e.message}"
       end
 
+      # Helper - outputs a hash
       def h_to_s(hash)
         hash.map { |k, v| "  #{k}: #{v}" }.join("\n")
       end

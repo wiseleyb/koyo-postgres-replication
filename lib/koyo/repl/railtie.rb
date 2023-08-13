@@ -21,14 +21,12 @@ module Koyo
               puts ''
             end
 
-            # Installs templates
-            desc 'Install'
+            desc 'Install templates unless they already exist'
             task install: :environment do
               Koyo::Repl::Install.copy!
             end
 
-            # This can only be run once - no multiple servers
-            desc 'Process replication slot events'
+            desc 'Process replication slot events - only run this server ONCE'
             task run_server: :environment do
               puts 'Running Koyo::Repl::PostgresServer.run!'
               Koyo::Repl::PostgresServer.run!

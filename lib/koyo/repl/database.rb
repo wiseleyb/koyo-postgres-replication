@@ -3,13 +3,45 @@
 module Koyo
   module Repl
     # Basic utilities for postgres replication
-    # Doc https://www.postgresql.org/docs/9.4/logicaldecoding-example.html
+    # @see Postgres doc for more options
+    # https://www.postgresql.org/docs/9.4/logicaldecoding-example.html
     class Database
       class << self
+        # TODO: refactor this out of the config class
+        # DB connection name in config/database.yml. Defaults to Rails.env
+        # (so standard connection on most rails app). We add this because you need
+        # admin priveleges to use replication and some companies have problems with
+        # this. Whatever this is called it will have Rails.env tacked on so if it's
+        # replication - the connection would be "replciation_#{Rails.env}"
+        def conn
+          return @conn if @conn
+
+          conn_name = Koyo::Repl.config.database_name
+
+          unless conn_name
+            @conn = ActiveRecord::Base.connection
+            return @conn
+          end
+
+          conn_name = "#{conn_name}_#{Rails.env}"
+
+          msg = "source=KoyoReplication Connecting to #{conn_name}"
+          Rails.logger.info msg
+
+          config =
+            ApplicationRecord.configurations.find_db_config(conn_name)
+          ActiveRecord::Base.establish_connection config
+          @conn = ActiveRecord::Base.connection
+          @conn
+        end
+
         # Reads from the replication slot.
         # Reading from this marks the rows read (so you won't see them again)
-        # For testing you can `peek_slot` if you want to - which will keep the data
-        # in the slot
+        # For testing you can use `peek_slot` if you want to - which will keep
+        # the data in the slot. A known issue is that this slot can grow so
+        # large that you it'll time out when trying to read from it. This is a
+        # major downside of this approach. Please open an issue if you know a
+        # solution.
         def read_slot!
           sql = %(
           SELECT *
@@ -23,7 +55,9 @@ module Koyo
         end
 
         # Peeks at data in the replication-slot. Use this for debugging. This
-        # will leave the data in the replication-slot
+        # will leave the data in the replication-slot. If
+        # Configuration.test_mode=true the code will default to peek'ing
+        # instead of reading.
         def peek_slot
           sql = %(
           SELECT *
@@ -62,7 +96,7 @@ module Koyo
           exec_sql(sql).first['count'].to_i.positive?
         end
 
-        # Returns all replication slots on the system that support wal2json
+        # Returns all data for current replication slot.
         def replication_slot
           sql = %(
           select *
@@ -96,7 +130,7 @@ module Koyo
           exec_sql(sql)
         end
 
-        # Deletes replication slot
+        # Deletes replication slot. You need admin priveleges for this.
         def delete_replication_slot!
           return unless replication_slot_exists?
 
@@ -104,26 +138,25 @@ module Koyo
           exec_sql(sql)
         end
 
+        # Checks the wal_level - which should be "logical" if things are setup
+        # properly. You can change the wal_level in postgres config. See the
+        # README for details on on this. When you change this you need to
+        # restart the postgres server
         def wal_level
           sql = %(show wal_level)
           exec_sql(sql).first['wal_level']
         end
 
+        # Helper - just returns the configured database name being used. Can
+        # be changed using Configuration.slot
         def current_db_name
           Rails.configuration.database_configuration[Rails.env]['database']
         end
 
-        # This requires admin permissions, requires restarting your system
-        # so i removed it for now
-        # def set_wal_level_to_logical
-        #   sql = %(ALTER SYSTEM SET wal_level = logical)
-        #   exec_sql(sql)
-        # end
-
         # Runs SQL commands
         def exec_sql(sql)
           # ActiveRecord::Base.connection.execute(sql)
-          Koyo::Repl.config.db_conn.execute(sql)
+          conn.execute(sql)
         end
 
         # wrap this to support faster JSON parsing in the future

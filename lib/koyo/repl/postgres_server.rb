@@ -2,12 +2,14 @@
 
 module Koyo
   module Repl
-    # Monitors a postgres replication slot
+    # Monitors a postgres replication slot and fires off events
+    # for monitoring to models and a catch-all class
     class PostgresServer
+      # includes log helpers
       include Koyo::Repl::Log
 
       class << self
-        attr_accessor :tables
+        attr_accessor :tables # cache of class level :tables
       end
 
       attr_accessor :tables, # classes that implement koyo_repl_handler(row)
@@ -16,13 +18,19 @@ module Koyo
 
       attr_writer :tick_tock # just outputs something in logs every minute
 
-      # method name to look for in classes that support this
+      # Method name to look for in models that support this
+      # @see Model callbacks
+      # https://github.com/wiseleyb/koyo-postgres-replication/wiki/Model-call-backs
       TABLE_METHOD_NAME = :koyo_repl_handler
 
+      # Runs the server. You should only be running ONE of these
+      # servers at a time.
       def self.run!
         new.run!
       end
 
+      # Initialize server: checks for basics and fails if things
+      # aren't setup
       def initialize
         @test_mode = Koyo::Repl.config.test_mode
         if Koyo::Repl.config.auto_create_replication_slot
@@ -34,6 +42,8 @@ module Koyo
         raise "Can't run server: #{@errs.join('; ')}" unless can_run?
       end
 
+      # Runs the server. You should only be running ONE of these
+      # servers at a time.
       def run!
         # This allows us to catch ctrl-c and exit
         trap('SIGINT') { throw :done }
@@ -59,6 +69,9 @@ module Koyo
         end
       end
 
+      # Handles erros that aren't fatal. Calls back to
+      # Koyo::Repl::Log@log_repl_error which calls back
+      # to KoyoReplHandlerServer@log_repl_error
       def log_recoverable_error(err)
         Koyo::Repl::EventHandlerService.koyo_error(err)
         msg = "Error in ReplPostgresServer: #{err.message}"
@@ -66,6 +79,8 @@ module Koyo
         sleep Koyo::Repl.config.sql_delay
       end
 
+      # Basic heart beat ping to allow you to see the server is still
+      # running. Pings every 60 seconds
       def tick_tock
         @tick_tock += 1
         return unless @tick_tock > 59
@@ -75,8 +90,7 @@ module Koyo
       end
 
       # Does a single check of the replication slot
-      #
-      # @param test_mode [Boolean] - default: false. If true uses peek, which will
+      # If test_mode=true uses peek, which will
       # leave data in the replication slot (for testing/debugging)
       def check
         read_sql_results.each do |sql_res|
@@ -87,6 +101,8 @@ module Koyo
         end
       end
 
+      # Reads data from the replication slot
+      # Handles test_mode (so will only peek if true)
       def read_sql_results
         if test_mode
           Koyo::Repl::Database.peek_slot
@@ -95,6 +111,10 @@ module Koyo
         end
       end
 
+      # Processes a row from the replication slot
+      # @param row Koyo::Repl::DataRow
+      # @see For details on row
+      # https://github.com/wiseleyb/koyo-postgres-replication/wiki/Koyo::Repl::DataRow-data-spec
       def check_row(row)
         log_repl_debug(row.to_yaml)
         # catch all for all events (allows rails project to use this
@@ -112,9 +132,9 @@ module Koyo
         log_repl_error('Unexpected Error in ReplServer.check', err: e)
       end
 
-      # checks basics to see if we can run
-      # logs errors (should be visible in whatever is running the server
-      # returns t/f
+      # Checks basics to see if we can run
+      # Logs errors (should be visible in whatever is running the server
+      # @return true can run when true or false (can't run)
       def can_run?
         @errs = []
 
@@ -137,7 +157,8 @@ module Koyo
       def self.tables_that_handle_koyo_replication
         return tables if tables.present?
 
-        log_repl_info("Init: Finding models that support #{TABLE_METHOD_NAME}")
+        log_repl_info('Init: Finding models that support '\
+                      "#{TABLE_METHOD_NAME}")
         tables = {}
         ActiveRecord::Base.connection.tables.map do |model|
           klass_name = model.capitalize.singularize.camelize

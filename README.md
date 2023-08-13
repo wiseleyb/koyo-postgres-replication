@@ -10,11 +10,11 @@ Please see [the wiki page that discusses replication slots](https://github.com/w
 
 ### Why would you use these?
 
-There are tons of reasons and tons of alternatives. 
-
 Example: You have a no-sql store (like Elastic-Search) that needs to be in-sync with your database. You could do this "the Rails way" with `after-save` type patterns. You could do this with a service type architecture that updates things. But if you have non-rails teams updating data, this becomes more complex. Please see [the wiki](https://github.com/wiseleyb/koyo-postgres-replication/wiki/What-is-replication%3F) for more discussion on this.
 
 ## Quick Start
+
+You need to configure Postgres for this first. This isn't enabled by default. See [Configuring Postgres for Replication in the wiki](https://github.com/wiseleyb/koyo-postgres-replication/wiki/Configuring-Postgres-for-Replication)
 
 Add to Gemfile:
 
@@ -126,6 +126,14 @@ Cheat sheets:
 Build yard docs: `yard`
 View docs: `yard server` then open https://localhost:8808
 
+# Contributing
+
+TODO: update
+
+* follow github guide
+* run/add specs
+* run rubocop
+* add/run yard
 
 # TODO
 
@@ -135,3 +143,4 @@ View docs: `yard server` then open https://localhost:8808
 * add diagnostic tool (checks permissions, postgres, etc)
 * [yard docs](https://gnuu.org/2009/11/21/generate-yard-docs-for-your-gem/)
 * add badges like in https://raw.githubusercontent.com/rubocop/rubocop/master/README.md
+* support multiple primary keys

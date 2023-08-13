@@ -2,8 +2,7 @@
 
 module Koyo
   module Repl
-    # Provides state and debugging info for Repl setup
-    # can be run with rake koyo::repl::diagnostics
+    # Copies required files to Rails project
     class Install
       def self.copy!
         kri = Koyo::Repl::Install.new
@@ -11,6 +10,7 @@ module Koyo
         kri.drop_create_slot!
       end
 
+      # Copies files unless they already exist
       def copy!
         debugp ''
         debugp '-' * 80
@@ -26,15 +26,19 @@ module Koyo
         debugp '-' * 80
       end
 
+      # Debugging helper
       def debugp(msg)
         puts msg unless Rails.env.test? # don't pollute spec output
       end
 
+      # Drops and recreates replication slot
       def drop_create_slot!
         Koyo::Repl::Database.delete_replication_slot!
         Koyo::Repl::Database.create_replication_slot!
       end
 
+      # Helper for checking if files exist
+      # @param fname file name (with path)
       def file_exists?(fname)
         if File.exist?(fname)
           puts "SKIPPING: #{fname} exists. Delete this file to recreated it."
@@ -43,6 +47,9 @@ module Koyo
         false
       end
 
+      # Copies individual file
+      # @param from_fname file to copy from
+      # @param to_fname file to copy to
       def copy(from_fname, to_fname)
         return if file_exists?(to_fname)
 
@@ -52,10 +59,12 @@ module Koyo
         FileUtils.cp(from_fname, to_fname.gsub('.txt', '.rb'))
       end
 
+      # Path of template files to copy
       def template_path
         "#{File.dirname(__FILE__)}/templates"
       end
 
+      # Rails path helper
       def rails_path
         Rails.root.to_s
       end

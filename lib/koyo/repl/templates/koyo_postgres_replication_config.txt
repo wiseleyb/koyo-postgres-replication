@@ -14,8 +14,8 @@ Koyo::Repl.configure do |config|
   # this. Whatever this is called it will have Rails.env tacked on so if it's
   # replication - the connection would be "replciation_#{Rails.env}"
   # You can set this with an ENV as well: 
-  #   KOYO_REPL_DB_CONN
-  # config.db_conn = 'replication'
+  #   KOYO_REPL_DATABASE_NAME
+  # config.database_name = 'replication'
 
   # Disable logging. Not recommended.
   # You can set this with an ENV as well: 

@@ -2,14 +2,13 @@
 
 module Koyo
   module Repl
-    # Currently does nothing but allows us to do things in the future if needed
+    # Calls back to Rails project
     # This is primarily for overriding in the rails app to do things like ping
     # Slack, or restart things on errors, etc
     class EventHandlerService
       class << self
         # example row:
         # User.handle_replcation called
-        # TODO: Add link to class returned
         def koyo_handle_all_replication(row)
           KoyoReplHandlerService.koyo_handle_all_replication(row)
         end
