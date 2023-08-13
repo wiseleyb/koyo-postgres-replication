@@ -138,6 +138,12 @@ module Koyo
           exec_sql(sql)
         end
 
+        # Drops and recreates replication slot
+        def drop_create_slot!
+          Koyo::Repl::Database.delete_replication_slot!
+          Koyo::Repl::Database.create_replication_slot!
+        end
+
         # Checks the wal_level - which should be "logical" if things are setup
         # properly. You can change the wal_level in postgres config. See the
         # README for details on on this. When you change this you need to

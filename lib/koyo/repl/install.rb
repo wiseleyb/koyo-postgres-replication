@@ -7,7 +7,7 @@ module Koyo
       def self.copy!
         kri = Koyo::Repl::Install.new
         kri.copy!
-        kri.drop_create_slot!
+        Koyo::Repl::Database.drop_create_slot!
       end
 
       # Copies files unless they already exist
@@ -29,12 +29,6 @@ module Koyo
       # Debugging helper
       def debugp(msg)
         puts msg unless Rails.env.test? # don't pollute spec output
-      end
-
-      # Drops and recreates replication slot
-      def drop_create_slot!
-        Koyo::Repl::Database.delete_replication_slot!
-        Koyo::Repl::Database.create_replication_slot!
       end
 
       # Helper for checking if files exist
