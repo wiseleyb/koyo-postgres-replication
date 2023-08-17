@@ -1,5 +1,8 @@
 # Koyo::Postgres::Replication
 
+例 rei - Japanese for example 
+効用 koyo - Japanese for utility
+
 ## Replcation slots
 
 This gem tries to simplify dealing with a `replication slot` in Postgres. 
