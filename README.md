@@ -161,6 +161,12 @@ See wiki page on [working with this
 gem](https://github.com/wiseleyb/koyo-postgres-replication/wiki/Developing-on-this-GEM)
 for basics of debugging and working with.
 
+## Working with replication slots
+
+See
+[koyo::repl::database](https://github.com/wiseleyb/koyo-postgres-replication/blob/main/lib/koyo/repl/database.rb)
+for sql examples on how to interact with replication slots.
+
 ## Yard Doc
 
 Cheat sheets:
@@ -178,6 +184,16 @@ TODO: update
 * run/add specs
 * run rubocop
 * add/run yard
+
+# Working with gem
+
+## Gem Build
+
+```
+rm koyo-postgres-replication-{current version}.gem
+git add .
+gem build
+```
 
 # TODO
 
