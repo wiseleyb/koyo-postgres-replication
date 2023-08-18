@@ -6,9 +6,7 @@
 - fix [Issue
   2](https://github.com/wiseleyb/koyo-postgres-replication/issues/2) - gemspec
 config around Yard doc
-- fix [Issue 5](https://github.com/wiseleyb/koyo-postgres-replication/issues/5)
-  remove need to require 'koyo' in Gemfile
-
+- Enter retry loop instead of crashing when db connection goes away
 
 ## 0.1.1.pre
 

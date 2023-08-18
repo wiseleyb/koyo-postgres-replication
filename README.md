@@ -36,7 +36,7 @@ wiki](https://github.com/wiseleyb/koyo-postgres-replication/wiki/Configuring-Pos
 Add to Gemfile:
 
 ```
-gem 'koyo-postgres-replication'
+gem 'koyo-postgres-replication', require: 'koyo'
 ```
 
 Then:
