@@ -75,7 +75,7 @@ module Koyo
       def log_recoverable_error(err)
         Koyo::Repl::EventHandlerService.koyo_error(err)
         msg = "Error in ReplPostgresServer: #{err.message}"
-        log_repl_error(msg, err: err)
+        log_repl_error(msg, err:)
         sleep Koyo::Repl.config.sql_delay
       end
 

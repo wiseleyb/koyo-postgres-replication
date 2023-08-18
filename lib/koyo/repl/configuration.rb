@@ -92,12 +92,12 @@ module Koyo
       # Helper method that converts config settings into a hash
       def to_h
         {
-          auto_create_replication_slot: auto_create_replication_slot,
-          config_prefix: config_prefix,
-          database_name: database_name,
-          slot: slot,
-          sql_delay: sql_delay,
-          test_mode: test_mode
+          auto_create_replication_slot:,
+          config_prefix:,
+          database_name:,
+          slot:,
+          sql_delay:,
+          test_mode:
         }
       end
 

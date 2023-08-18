@@ -6,9 +6,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # Specify your gem's dependencies in koyo_repl.gemspec
 gemspec
 
+gem 'pg', '~> 1.1'
 gem 'rails', '~> 7.0'
 gem 'rake', '~> 13.0'
-gem 'pg', '~> 1.1'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
