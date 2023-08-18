@@ -51,22 +51,55 @@ module Koyo
             tick_tock
           # Possibly fatal errors
           rescue ActiveRecord::StatementInvalid => e
-            if e.cause.exception.is_a?(PG::ConnectionBad)
-              Koyo::Repl::EventHandlerService.koyo_error(e)
-              msg = "SHUTTING DOWN. Fatal Error in ReplPostgresServer: #{e.message}"
-              log_repl_fatal(msg, err: e)
-              break
-            else
-              log_recoverable_error(e)
-            end
-          # recoverable error
+            Koyo::Repl::EventHandlerService.koyo_error(e)
+            @retry = 0
+            break unless attempt_reconnect(e)
           rescue StandardError => e
             log_recoverable_error(e)
           end
 
-          success = system("sleep #{Koyo::Repl.config.sql_delay}")
-          break unless success
+          break unless sleep_success?
         end
+      end
+
+      # Attempts to re-establish DB connection. If it finds any other
+      # error this is fatal and server crashes at this point
+      # @param [StandardError] err Error that kicked off this retry loop
+      def attempt_reconnect(err)
+        @retry ||= 0
+        msg = "Error: Attempting to reconnect to DB. Retry: #{@retry}."
+        log_recoverable_error(err)
+
+        return false unless sleep_success?
+
+        Koyo::Repl::Database.re_establish_conn
+        msg = 'Re-established DB connection'
+        log_repl_info(msg)
+        true
+      rescue StandardError => e
+        unless bad_connection_error?(e)
+          msg = 'Fatal: Found erorr unrelated to PG::ConnectionBad while '\
+                "trying to reconnect: Error: #{e.message}"
+          log_repl_fatal(msg, err: e)
+          return false
+        end
+
+        @retry += 1
+        retry
+      end
+
+      # Test error to see if it's db:connection related
+      # Mostly here for specs
+      # @param [StandardError] err Error to check
+      def bad_connection_error?(err)
+        err.cause.exception.is_a?(PG::ConnectionBad)
+      end
+
+      # Did sleep succeed... this fails when you do something like hit
+      # ctrl-c on the server
+      # Mostly here for specs
+      def sleep_success?
+        system("sleep #{Koyo::Repl.config.sql_delay}")
       end
 
       # Handles erros that aren't fatal. Calls back to

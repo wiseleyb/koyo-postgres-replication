@@ -19,6 +19,7 @@ module Koyo
           conn_name = Koyo::Repl.config.database_name
 
           unless conn_name
+            ActiveRecord::Base.establish_connection
             @conn = ActiveRecord::Base.connection
             return @conn
           end
@@ -33,6 +34,14 @@ module Koyo
           ActiveRecord::Base.establish_connection config
           @conn = ActiveRecord::Base.connection
           @conn
+        end
+
+        # Attempts to re-establish db connection
+        # This would be used when something happens like the postgres
+        # server restarts
+        def re_establish_conn
+          @conn = nil
+          conn
         end
 
         # Reads from the replication slot.
