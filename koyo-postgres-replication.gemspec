@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   # spec.metadata["allowed_push_host"] = ''
   spec.metadata['changelog_uri'] = "#{url}/changelog.md"
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = url
+  spec.metadata['source_code_uri'] = burl
 
   spec.files = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|
