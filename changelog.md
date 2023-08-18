@@ -12,3 +12,7 @@
 - utility class for working with replication slots
 - functional - but not tested in real life yet
 
+## 0.1.1.pre
+
+- remove deprecated has_rdoc from gem spec
+
