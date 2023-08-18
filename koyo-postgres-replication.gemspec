@@ -17,10 +17,13 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.7.0'
 
-  # spec.metadata["allowed_push_host"] = ''
-  spec.metadata['changelog_uri'] = "#{url}/changelog.md"
-  spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = burl
+  spec.metadata = {
+    'bug_tracker_uri' => "#{url}/issues",
+    'changelog_uri' => "#{url}/blob/main/changelog.md",
+    'documentation' => 'https://www.rubydoc.info/github/wiseleyb/koyo-postgres-replication/main',
+    'homepage_uri' => spec.homepage,
+    'source_code_uri' => burl
+  }
 
   spec.files = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|

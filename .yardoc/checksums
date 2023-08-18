@@ -4,11 +4,11 @@ lib/koyo/repl/mod.rb 92b54b56643b06fdc74adc65dc04460f631d4036
 lib/koyo/repl/data.rb cb847585c0f439b9f645b5ebd7fa3b96e08b94ff
 lib/koyo/repl/install.rb 9b19b7bb74d084882a1f726693bac2d693015daa
 lib/koyo/repl/railtie.rb acb36cbbe1b386ece7567990945adecb6b6e5b80
-lib/koyo/repl/version.rb 94239a7a9719294e13a38b878da1d328b44fb3f5
+lib/koyo/repl/version.rb 45af9c57eb86c840d6c0756f1cd0b8a2f4b00ac0
 lib/koyo/repl/data_row.rb 321caf0b080621f2d319fa152948cbe864c77294
 lib/koyo/repl/database.rb 39a304909ccf68d69d36c84e3036debd9f29f6ec
-lib/koyo/repl/diagnostics.rb 03b91c5ea3dbe1e337f4427d8f3261ebedb45a70
-lib/koyo/repl/configuration.rb 17858828602d696a584a9e3c239c0a5d94faa738
-lib/koyo/repl/postgres_server.rb 2569fa642e55f6032e6ea73e9ab8762018d3cd6c
+lib/koyo/repl/diagnostics.rb 93226c47642c5e20f615425aff8a0c0ba988b07b
+lib/koyo/repl/configuration.rb 8a32f819abf035340a3997d989ccafe0751d209e
+lib/koyo/repl/postgres_server.rb c8f557e1eec5b9be51ebd48002a3986eddbd6634
 lib/koyo_postgres_replication.rb e3f4d905e3045b59f1f7c799d84cd9fde70eebd8
 lib/koyo/repl/event_handler_service.rb 99b67bdcf3e0e92a04cd01bf8d05a4569b45d218
