@@ -72,7 +72,7 @@ module Koyo
 
       # Returns configured database name
       def adapter_name
-        Koyo::Repl::Datasbase.conn.adapter_name
+        Koyo::Repl::Database.conn.adapter_name
       rescue StandardError => e
         "Error: #{e.message}"
       end

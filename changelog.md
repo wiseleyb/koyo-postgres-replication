@@ -15,4 +15,4 @@
 ## 0.1.1.pre
 
 - remove deprecated has_rdoc from gem spec
-
+- fix [Issue 1](https://github.com/wiseleyb/koyo-postgres-replication/issues/1) - remove recursive run, replace with simple loop

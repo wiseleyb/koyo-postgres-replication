@@ -45,27 +45,27 @@ module Koyo
       # Runs the server. You should only be running ONE of these
       # servers at a time.
       def run!
-        # This allows us to catch ctrl-c and exit
-        trap('SIGINT') { throw :done }
-
-        catch(:done) do
-          check
-          sleep Koyo::Repl.config.sql_delay
-          tick_tock
-          run!
-        # Possibly fatal errors
-        rescue ActiveRecord::StatementInvalid => e
-          if e.cause.exception.is_a?(PG::ConnectionBad)
-            Koyo::Repl::EventHandlerService.koyo_error(e)
-            msg = "SHUTTING DOWN. Fatal Error in ReplPostgresServer: #{e.message}"
-            log_repl_fatal(msg, err: e)
-          else
+        loop do
+          begin
+            check
+            tick_tock
+          # Possibly fatal errors
+          rescue ActiveRecord::StatementInvalid => e
+            if e.cause.exception.is_a?(PG::ConnectionBad)
+              Koyo::Repl::EventHandlerService.koyo_error(e)
+              msg = "SHUTTING DOWN. Fatal Error in ReplPostgresServer: #{e.message}"
+              log_repl_fatal(msg, err: e)
+              break
+            else
+              log_recoverable_error(e)
+            end
+          # recoverable error
+          rescue StandardError => e
             log_recoverable_error(e)
-            run!
           end
-        rescue StandardError => e
-          log_recoverable_error(e)
-          run!
+
+          success = system("sleep #{Koyo::Repl.config.sql_delay}")
+          break unless success
         end
       end
 
@@ -76,7 +76,6 @@ module Koyo
         Koyo::Repl::EventHandlerService.koyo_error(err)
         msg = "Error in ReplPostgresServer: #{err.message}"
         log_repl_error(msg, err:)
-        sleep Koyo::Repl.config.sql_delay
       end
 
       # Basic heart beat ping to allow you to see the server is still
