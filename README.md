@@ -170,6 +170,9 @@ for sql examples on how to interact with replication slots.
 
 ## Yard Doc
 
+Yard docs are up on
+[RubyDoc.info](https://rubydoc.info/github/wiseleyb/koyo-postgres-replication/main)
+
 Cheat sheets:
 * https://gist.github.com/chetan/1827484
 * https://kapeli.com/cheat_sheets/Yard.docset/Contents/Resources/Documents/index

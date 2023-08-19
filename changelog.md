@@ -1,5 +1,15 @@
 # Koyo Postgres Replication Changelog
 
+## In progress
+
+- Add link to
+  [doc](https://rubydoc.info/github/wiseleyb/koyo-postgres-replication/main) in
+README
+
+## 0.1.3.pre
+
+- republishing yanked gem
+
 ## 0.1.2.pre
 
 - bump TargetRubyVersion for Rubocop to 3.2.2
