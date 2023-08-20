@@ -6,6 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # Specify your gem's dependencies in koyo_repl.gemspec
 gemspec
 
+gem 'composite_primary_keys', '~> 14.0'
 gem 'pg', '~> 1.1'
 gem 'rails', '~> 7.0'
 gem 'rake', '~> 13.0'

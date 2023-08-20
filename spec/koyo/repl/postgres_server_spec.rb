@@ -30,7 +30,10 @@ RSpec.describe Koyo::Repl::PostgresServer, type: :service do
       let(:tables) { Koyo::Repl::PostgresServer.tables_that_handle_koyo_replication }
 
       it 'works' do
-        res = { 'users' => 'User' }
+        res = {
+          'user_interests_non_rails' => 'UserInterestsNonRail',
+          'users' => 'User'
+        }
         expect(tables).to eq(res)
         expect(Koyo::Repl::PostgresServer.new.tables).to eq(res)
       end

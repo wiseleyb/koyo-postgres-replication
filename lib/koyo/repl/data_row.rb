@@ -11,8 +11,10 @@ module Koyo
                     :kind,          # insert/update/delete
                     :schema,        # always public for this - not needed
                     :table,         # table being changed
-                    :id,            # table.id
-                    :id_type,       # integer/uuid
+                    :id,            # table.id, null for composite keys
+                    :id_type,       # integer/uuid, null for composite keys
+                    :ids,           # for composite keys - array of ids
+                    :id_types,      # for composite keys - array of types
                     :columns,       # all columns from table - array
                     :column_types,  # all types of columns - array
                     :values         # all values from table - array
@@ -34,12 +36,12 @@ module Koyo
       # WARN: this breaks for multiple primary keys
       def check_set_primary_keys
         if @row['oldkeys']
-          if @row['oldkeys']['keynames'].size > 1
-            raise "This doesn't support multiple keys right now"
+          @ids = Array.new(@row['oldkeys']['keyvalues'])
+          @id_types = Array.new(@row['oldkeys']['keytypes'])
+          if @row['oldkeys']['keynames'].size == 1
+            @id = @ids.first
+            @id_type = @id_types.first
           end
-
-          @id = @row['oldkeys']['keyvalues'].first
-          @id_type = @row['oldkeys']['keytypes'].first
         else
           @id = val(:id)
           @id_type = type(:id)
@@ -49,13 +51,15 @@ module Koyo
       # Gets a value for a name from columnsvalues
       # @param name column name
       def val(name)
-        values[columns.index(name.to_s)]
+        idx = columns.index(name.to_s)
+        idx ? values[idx] : nil
       end
 
       # Get a val type from columntypes
       # @param name column name
       def type(name)
-        column_types[columns.index(name.to_s)]
+        idx = columns.index(name.to_s)
+        idx ? column_types[idx] : nil
       end
     end
   end

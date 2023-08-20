@@ -31,6 +31,11 @@ module Koyo
               puts 'Running Koyo::Repl::PostgresServer.run!'
               Koyo::Repl::PostgresServer.run!
             end
+
+            desc 'Recreate replication slot'
+            task recreate: :environment do
+              Koyo::Repl::Database.drop_create_slot!
+            end
           end
         end
       end

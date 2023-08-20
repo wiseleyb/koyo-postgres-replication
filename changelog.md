@@ -1,10 +1,12 @@
 # Koyo Postgres Replication Changelog
 
-## In progress
+## 0.1.4.pre
 
 - Add link to
   [doc](https://rubydoc.info/github/wiseleyb/koyo-postgres-replication/main) in
 README
+- Fix issues around composite keys (multiple primary keys) [Issues
+  4](https://github.com/wiseleyb/koyo-postgres-replication/issues/4)
 
 ## 0.1.3.pre
 

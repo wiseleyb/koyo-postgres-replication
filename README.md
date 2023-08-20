@@ -1,6 +1,7 @@
 # Koyo::Postgres::Replication
 
 例 rei - Japanese for example 
+
 効用 koyo - Japanese for utility
 
 ## Replcation slots

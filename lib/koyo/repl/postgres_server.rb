@@ -62,6 +62,18 @@ module Koyo
         end
       end
 
+      # Does a single check of the replication slot
+      # If test_mode=true uses peek, which will
+      # leave data in the replication slot (for testing/debugging)
+      def check
+        read_sql_results.each do |sql_res|
+          rows = Koyo::Repl::Data.new(sql_res).rows # returns ReplDataRow
+          rows.each do |row|
+            check_row(row)
+          end
+        end
+      end
+
       # Attempts to re-establish DB connection. If it finds any other
       # error this is fatal and server crashes at this point
       # @param [StandardError] err Error that kicked off this retry loop
@@ -119,18 +131,6 @@ module Koyo
 
         log_repl_info("tick tock: #{Time.now}")
         @tick_tock = 0
-      end
-
-      # Does a single check of the replication slot
-      # If test_mode=true uses peek, which will
-      # leave data in the replication slot (for testing/debugging)
-      def check
-        read_sql_results.each do |sql_res|
-          rows = Koyo::Repl::Data.new(sql_res).rows # returns ReplDataRow
-          rows.each do |row|
-            check_row(row)
-          end
-        end
       end
 
       # Reads data from the replication slot
