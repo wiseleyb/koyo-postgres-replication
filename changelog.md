@@ -1,5 +1,10 @@
 # Koyo Postgres Replication Changelog
 
+## 0.1.5.pre
+
+- Yard doc gemspec change to get it to show up in rubygems
+- Add Docker files
+
 ## 0.1.4.pre
 
 - Add link to

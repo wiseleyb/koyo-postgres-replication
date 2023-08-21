@@ -192,6 +192,16 @@ TODO: update
 
 # Working with gem
 
+## Run specs
+
+```
+rspec spec
+```
+
+### Docker
+
+See [Docker wiki page](https://github.com/wiseleyb/koyo-postgres-replication/wiki/Docker)
+
 ## Gem Build
 
 ```

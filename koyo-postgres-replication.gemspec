@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.metadata = {
     'bug_tracker_uri' => "#{url}/issues",
     'changelog_uri' => "#{url}/blob/main/changelog.md",
-    'documentation' => 'https://www.rubydoc.info/github/wiseleyb/koyo-postgres-replication/main',
+    'documentation_uri' => 'https://www.rubydoc.info/github/wiseleyb/koyo-postgres-replication/main',
     'homepage_uri' => spec.homepage,
     'source_code_uri' => burl
   }
