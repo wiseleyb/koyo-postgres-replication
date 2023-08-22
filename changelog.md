@@ -3,6 +3,7 @@
 ## 0.1.6.pre
 
 - Clean up docker config
+- Clean up README/doc
 
 ## 0.1.5.pre
 

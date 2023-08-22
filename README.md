@@ -4,9 +4,63 @@
 
 効用 koyo - Japanese for utility
 
-## Replcation slots
+## What is this?
 
-This gem tries to simplify dealing with a `replication slot` in Postgres. 
+This gem tries to simplify dealing with a `replication slot` in Postgres. It
+gives you a simple way to capture events in your Rails app when your Postgres
+DB has a create, update, delete event. You can manage this from one class, or
+manage this on a table-by-table basis within ActiveRecord Models. 
+
+Example of catch all:
+
+```
+class KoyoReplHandlerService < Koyo::Repl::EventHandlerService
+  class << self
+    # This is called whenever a create/update/delete action happens
+    # @param (Koyo::Repl::DataRow) row is docuemented in the wiki at
+    # https://github.com/wiseleyb/koyo-postgres-replication/wiki/Koyo::Repl::DataRow-data-spec
+    def koyo_handle_all_replication(row)
+      case row.kind
+      when 'insert'
+        case row.table
+        when 'users'
+          # Do something with data... like update some api
+          # It's important to do this async (active-job/sidekiq) so you 
+          # don't back up the replication slot
+          UpdateSomeApi.performn_async(row.id)
+          # This job would do something like:
+          # User.find(row.id); Call some API with data
+      when 'delete'
+      when 'update'
+    end
+  end
+end
+```
+
+Example of model callback:
+
+```
+class User < ApplicationRecord
+  include Koyo::Repl::Mod
+  koyo_repl_handler :handle_replication
+
+  # This is called when a row is created/updated/deleted for the users table
+  # @param (Koyo::Repl::DataRow) row is docuemented in the wiki at
+  # https://github.com/wiseleyb/koyo-postgres-replication/wiki/Koyo::Repl::DataRow-data-spec
+  def self.handle_replication(row)
+    case row.kind
+    when 'insert'
+      # Do something with data... like update some api
+      # It's important to do this async (active-job/sidekiq) so you 
+      # don't back up the replication slot
+      UpdateSomeApi.performn_async(row.id)
+      # This job would do something like:
+      # User.find(row.id); Call some API with data
+    when 'delete'
+    when 'update'
+  end
+end
+```
 
 ### What is a replication slot?
 
