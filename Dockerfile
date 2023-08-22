@@ -17,13 +17,8 @@ RUN gem update --system && gem install bundler && gem install rails
 
 WORKDIR /usr/src/app
 
-COPY Gemfile .
-COPY Gemfile.lock .
-
 COPY . .
 
 RUN bundle install
-
-COPY . .
 
 CMD ["irb"] 
