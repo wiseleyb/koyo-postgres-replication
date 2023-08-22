@@ -4,7 +4,7 @@ lib/koyo/repl/mod.rb 92b54b56643b06fdc74adc65dc04460f631d4036
 lib/koyo/repl/data.rb cb847585c0f439b9f645b5ebd7fa3b96e08b94ff
 lib/koyo/repl/install.rb 9b19b7bb74d084882a1f726693bac2d693015daa
 lib/koyo/repl/railtie.rb 9c560c38f4663edda57aa39c9bb4bd9411daabbd
-lib/koyo/repl/version.rb d0d535b2aac27e3caa5eaeef69e117772e334f44
+lib/koyo/repl/version.rb a05897446d0fc22220b2393f10f0ab1f4dbba1d8
 lib/koyo/repl/data_row.rb 46bd0b440721f3b0ddcded3fef1817ca5d77cb35
 lib/koyo/repl/database.rb 719f2723b83a927e0524f6dea79393caaeba0514
 lib/koyo/repl/diagnostics.rb 93226c47642c5e20f615425aff8a0c0ba988b07b
