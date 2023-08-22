@@ -2,6 +2,6 @@
 
 module Koyo
   module Repl
-    VERSION = '0.1.6.pre'
+    VERSION = '7.0.0'
   end
 end

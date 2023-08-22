@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    koyo-postgres-replication (0.1.6.pre)
+    koyo-postgres-replication (7.0.0)
       pg (~> 1.1)
       rack (~> 2.0, >= 2.0.0)
       rails (~> 7.0)

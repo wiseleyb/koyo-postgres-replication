@@ -90,6 +90,18 @@ wiki](https://github.com/wiseleyb/koyo-postgres-replication/wiki/Configuring-Pos
 
 Add to Gemfile:
 
+### Versions
+
+The `main` branch is always the latest code. Branches contain versions that are specific to Rails.
+
+|Rails|Branch|Gemfile|
+|---|---|---|
+|7|[verions/7.0.0](https://github.com/wiseleyb/koyo-postgres-replication/tree/versions/7.0.0)|`gem 'koyo-postgres-replication', '~> 7.0', require: 'koyo'`|
+|6|coming soon|n/a|
+|5|coming soon|n/a|
+|4|coming soon|n/a|
+|3|probably not coming soon|n/a|
+
 ```
 gem 'koyo-postgres-replication', require: 'koyo'
 ```

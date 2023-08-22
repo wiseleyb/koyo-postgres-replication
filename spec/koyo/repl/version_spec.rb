@@ -4,6 +4,6 @@ require 'rails_helper'
 
 RSpec.describe Koyo::Repl, type: :service do
   it 'works' do
-    expect(Koyo::Repl::VERSION).to eq('0.1.6.pre')
+    expect(Koyo::Repl::VERSION).to eq('7.0.0')
   end
 end
